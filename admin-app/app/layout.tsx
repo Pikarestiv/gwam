@@ -14,6 +14,9 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <title>Gwam Admin Panel</title>
+      </head>
       <body>
         <QueryClientProvider client={queryClient}>
           <AdminShell>{children}</AdminShell>
