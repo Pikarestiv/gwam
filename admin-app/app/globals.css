@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-2: #334155;
+  --color-border: #334155;
+  --color-text: #f8fafc;
+  --color-muted: #94a3b8;
+  --color-primary: #3b82f6;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.input {
+  @apply w-full px-4 py-2 rounded-lg outline-none transition-all;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+}
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.btn-primary {
+  @apply px-4 py-2 rounded-lg font-semibold text-white transition-all active:scale-95;
+  background: var(--color-primary);
+}
+.btn-primary:disabled {
+  @apply opacity-50 cursor-not-allowed active:scale-100;
+}
+
+.card {
+  @apply p-4 rounded-xl border transition-all;
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
