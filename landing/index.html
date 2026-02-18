@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gwam — Send anonymous messages. No names, no judgment.</title>
+    <meta
+      name="description"
+      content="Gwam lets you send and receive anonymous messages. Share your link, get honest opinions, and reply publicly. No names, no judgment. Free forever."
+    />
+    <meta
+      name="keywords"
+      content="anonymous messages, NGL alternative, Kubool alternative, Nigeria, anonymous chat, gwam"
+    />
+    <meta name="author" content="Dumostech" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Gwam — Anonymous messages, no judgment."
+    />
+    <meta
+      property="og:description"
+      content="Share your link. Receive anonymous messages. Reply publicly. Free forever."
+    />
+    <meta
+      property="og:image"
+      content="https://gwam.dumostech.com/og-image.png"
+    />
+    <meta property="og:url" content="https://gwam.dumostech.com" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Gwam — Anonymous messages, no judgment."
+    />
+    <meta
+      name="twitter:description"
+      content="Share your link. Receive anonymous messages. Reply publicly."
+    />
+    <meta
+      name="twitter:image"
+      content="https://gwam.dumostech.com/og-image.png"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://app.gwam.dumostech.com/icons/icon-192.png" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#7c3aed",
+              "primary-light": "#a78bfa",
+              "primary-dark": "#5b21b6",
+              secondary: "#06b6d4",
+              bg: "#0a0a0f",
+              surface: "#12121a",
+              "surface-2": "#1a1a26",
+              border: "#2a2a3a",
+              muted: "#94a3b8",
+              subtle: "#475569",
+            },
+            fontFamily: {
+              sans: ["Inter", "system-ui", "sans-serif"],
+            },
+            animation: {
+              float: "float 3s ease-in-out infinite",
+              "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+              "slide-up": "slide-up 0.6s ease-out forwards",
+              "fade-in": "fade-in 0.8s ease-out forwards",
+              "count-up": "count-up 2s ease-out forwards",
+            },
+            keyframes: {
+              float: {
+                "0%, 100%": { transform: "translateY(0px)" },
+                "50%": { transform: "translateY(-12px)" },
+              },
+              "pulse-glow": {
+                "0%, 100%": { boxShadow: "0 0 20px rgba(124,58,237,0.3)" },
+                "50%": { boxShadow: "0 0 50px rgba(124,58,237,0.7)" },
+              },
+              "slide-up": {
+                from: { opacity: "0", transform: "translateY(30px)" },
+                to: { opacity: "1", transform: "translateY(0)" },
+              },
+              "fade-in": {
+                from: { opacity: "0" },
+                to: { opacity: "1" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: #0a0a0f;
+        color: #e2e8f0;
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Noise texture overlay */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* Gradient orbs */
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        pointer-events: none;
+      }
+
+      /* Glow border */
+      .glow-border {
+        border: 1px solid rgba(124, 58, 237, 0.4);
+        box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+      }
+
+      /* Animated gradient text */
+      .gradient-text {
+        background: linear-gradient(
+          135deg,
+          #a78bfa 0%,
+          #7c3aed 40%,
+          #06b6d4 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* WhatsApp bubble */
+      .wa-bubble {
+        background: #25d366;
+        border-radius: 18px 18px 18px 4px;
+      }
+
+      /* Scroll reveal */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Feature card hover */
+      .feature-card {
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          border-color 0.2s ease;
+      }
+      .feature-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(124, 58, 237, 0.5);
+        box-shadow: 0 8px 32px rgba(124, 58, 237, 0.2);
+      }
+
+      /* CTA button */
+      .btn-cta {
+        background: linear-gradient(135deg, #7c3aed, #5b21b6);
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      .btn-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(124, 58, 237, 0.5);
+      }
+      .btn-cta:active {
+        transform: translateY(0);
+      }
+
+      /* Step connector line */
+      .step-line {
+        background: linear-gradient(
+          to bottom,
+          rgba(124, 58, 237, 0.6),
+          rgba(124, 58, 237, 0.1)
+        );
+      }
+    </style>
+  </head>
+  <body class="relative overflow-x-hidden">
+    <!-- ─── NAV ─────────────────────────────────────────────────────────────── -->
+    <nav
+      class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
+      style="
+        background: rgba(10, 10, 15, 0.8);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(42, 42, 58, 0.5);
+      "
+    >
+      <div class="flex items-center gap-2">
+        <svg
+          width="28"
+          height="34"
+          viewBox="0 0 100 120"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M50 8 C22 8 8 28 8 55 L8 102 L21 92 L34 102 L47 92 L60 102 L73 92 L86 102 L92 102 L92 55 C92 28 78 8 50 8Z"
+            fill="#7c3aed"
+          />
+          <ellipse cx="37" cy="52" rx="9" ry="10" fill="#0a0a0f" />
+          <ellipse cx="63" cy="52" rx="9" ry="10" fill="#0a0a0f" />
+          <path
+            d="M39 72 Q50 66 61 72"
+            stroke="#0a0a0f"
+            stroke-width="3.5"
+            stroke-linecap="round"
+            fill="none"
+          />
+        </svg>
+        <span class="font-bold text-xl text-white">Gwam</span>
+      </div>
+      <div class="hidden md:flex items-center gap-8 text-sm text-slate-400">
+        <a href="#how-it-works" class="hover:text-white transition-colors"
+          >How it works</a
+        >
+        <a href="#features" class="hover:text-white transition-colors"
+          >Features</a
+        >
+        <a href="#stats" class="hover:text-white transition-colors">Stats</a>
+      </div>
+      <a
+        href="https://app.gwam.dumostech.com/register"
+        class="btn-cta px-5 py-2.5 rounded-xl text-sm font-semibold text-white"
+      >
+        Get started free →
+      </a>
+    </nav>
+
+    <!-- ─── HERO ─────────────────────────────────────────────────────────────── -->
+    <section
+      class="relative min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16 text-center overflow-hidden"
+    >
+      <!-- Background orbs -->
+      <div class="orb w-96 h-96 bg-purple-700 opacity-20 top-10 -left-32"></div>
+      <div
+        class="orb w-80 h-80 bg-cyan-600 opacity-10 bottom-20 -right-20"
+      ></div>
+
+      <!-- Ghost mascot -->
+      <div class="animate-float mb-8 relative z-10">
+        <svg
+          width="120"
+          height="144"
+          viewBox="0 0 100 120"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M50 8 C22 8 8 28 8 55 L8 102 L21 92 L34 102 L47 92 L60 102 L73 92 L86 102 L92 102 L92 55 C92 28 78 8 50 8Z"
+            fill="url(#ghost-grad)"
+          />
+          <defs>
+            <linearGradient
+              id="ghost-grad"
+              x1="8"
+              y1="8"
+              x2="92"
+              y2="120"
+              gradientUnits="userSpaceOnUse"
+            >
+              <stop offset="0%" stop-color="#a78bfa" />
+              <stop offset="100%" stop-color="#7c3aed" />
+            </linearGradient>
+          </defs>
+          <ellipse cx="37" cy="52" rx="9" ry="10" fill="#0a0a0f" />
+          <ellipse cx="63" cy="52" rx="9" ry="10" fill="#0a0a0f" />
+          <ellipse cx="37" cy="50" rx="3" ry="3.5" fill="white" opacity="0.6" />
+          <ellipse cx="63" cy="50" rx="3" ry="3.5" fill="white" opacity="0.6" />
+          <path
+            d="M39 72 Q50 66 61 72"
+            stroke="#0a0a0f"
+            stroke-width="3.5"
+            stroke-linecap="round"
+            fill="none"
+          />
+        </svg>
+      </div>
+
+      <!-- Headline -->
+      <div class="relative z-10 max-w-3xl mx-auto">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold mb-6"
+          style="
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #a78bfa;
+          "
+        >
+          👻 Anonymous messaging, reimagined
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-black leading-tight mb-6">
+          <span class="text-white">Say anything.</span><br />
+          <span class="gradient-text">Stay anonymous.</span>
+        </h1>
+
+        <p
+          class="text-lg md:text-xl text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed"
+        >
+          Share your Gwam link. Receive honest, anonymous messages from anyone.
+          No names, no judgment. Reply publicly and build real connections.
+        </p>
+
+        <div
+          class="flex flex-col sm:flex-row items-center justify-center gap-4"
+        >
+          <a
+            href="https://app.gwam.dumostech.com/register"
+            class="btn-cta px-8 py-4 rounded-2xl text-base font-bold text-white w-full sm:w-auto animate-pulse-glow"
+          >
+            Create your free Gwam link 👻
+          </a>
+          <a
+            href="https://app.gwam.dumostech.com/u/demo"
+            class="px-8 py-4 rounded-2xl text-base font-semibold w-full sm:w-auto transition-all hover:bg-white/5"
+            style="border: 1px solid rgba(42, 42, 58, 0.8); color: #94a3b8"
+          >
+            See a demo →
+          </a>
+        </div>
+
+        <!-- Social proof micro -->
+        <p class="text-sm text-slate-500 mt-8">
+          Join
+          <span id="hero-count" class="text-purple-400 font-semibold"
+            >1,200+</span
+          >
+          people already using Gwam
+        </p>
+      </div>
+
+      <!-- Floating message bubbles -->
+      <div
+        class="absolute left-4 md:left-16 top-1/3 hidden md:block reveal"
+        style="animation-delay: 0.3s"
+      >
+        <div
+          class="glow-border rounded-2xl px-4 py-3 text-sm max-w-[180px]"
+          style="background: rgba(18, 18, 26, 0.9)"
+        >
+          <p class="text-slate-300">You're actually really funny 😂</p>
+          <p class="text-xs text-slate-500 mt-1">from a ghost 👻</p>
+        </div>
+      </div>
+      <div
+        class="absolute right-4 md:right-16 top-1/2 hidden md:block reveal"
+        style="animation-delay: 0.5s"
+      >
+        <div
+          class="glow-border rounded-2xl px-4 py-3 text-sm max-w-[180px]"
+          style="background: rgba(18, 18, 26, 0.9)"
+        >
+          <p class="text-slate-300">Your cooking is 🔥 fr fr</p>
+          <p class="text-xs text-slate-500 mt-1">from a ghost 👻</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── HOW IT WORKS ──────────────────────────────────────────────────────── -->
+    <section id="how-it-works" class="relative py-24 px-4">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-16 reveal">
+          <p
+            class="text-purple-400 text-sm font-semibold uppercase tracking-widest mb-3"
+          >
+            Simple as 1-2-3
+          </p>
+          <h2 class="text-4xl md:text-5xl font-black text-white">
+            How Gwam works
+          </h2>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-start gap-8 md:gap-4">
+          <!-- Step 1 -->
+          <div class="flex-1 flex flex-col items-center text-center reveal">
+            <div
+              class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-4 font-black"
+              style="
+                background: rgba(124, 58, 237, 0.2);
+                border: 1px solid rgba(124, 58, 237, 0.4);
+                color: #a78bfa;
+              "
+            >
+              1
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Create your link</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Sign up free and get your personal Gwam link —
+              <span class="text-purple-400">app.gwam.dumostech.com/u/you</span>
+            </p>
+          </div>
+
+          <!-- Arrow -->
+          <div
+            class="hidden md:flex items-center justify-center pt-6 text-slate-600 text-2xl flex-shrink-0"
+          >
+            →
+          </div>
+
+          <!-- Step 2 -->
+          <div class="flex-1 flex flex-col items-center text-center reveal">
+            <div
+              class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-4 font-black"
+              style="
+                background: rgba(6, 182, 212, 0.15);
+                border: 1px solid rgba(6, 182, 212, 0.3);
+                color: #06b6d4;
+              "
+            >
+              2
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">
+              Share it everywhere
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Post your link on WhatsApp status, Instagram bio, Twitter —
+              anywhere your audience is.
+            </p>
+          </div>
+
+          <!-- Arrow -->
+          <div
+            class="hidden md:flex items-center justify-center pt-6 text-slate-600 text-2xl flex-shrink-0"
+          >
+            →
+          </div>
+
+          <!-- Step 3 -->
+          <div class="flex-1 flex flex-col items-center text-center reveal">
+            <div
+              class="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl mb-4 font-black"
+              style="
+                background: rgba(16, 185, 129, 0.15);
+                border: 1px solid rgba(16, 185, 129, 0.3);
+                color: #10b981;
+              "
+            >
+              3
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Receive & reply</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Get honest anonymous messages in your inbox. Reply publicly to
+              start real conversations.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FEATURES ──────────────────────────────────────────────────────────── -->
+    <section id="features" class="relative py-24 px-4">
+      <div class="orb w-64 h-64 bg-purple-800 opacity-15 top-0 right-0"></div>
+      <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16 reveal">
+          <p
+            class="text-purple-400 text-sm font-semibold uppercase tracking-widest mb-3"
+          >
+            Everything you need
+          </p>
+          <h2 class="text-4xl md:text-5xl font-black text-white">
+            Built for real connection
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Feature cards -->
+          <div
+            class="feature-card glow-border rounded-2xl p-6 reveal"
+            style="background: rgba(18, 18, 26, 0.8)"
+          >
+            <div class="text-3xl mb-4">👻</div>
+            <h3 class="text-lg font-bold text-white mb-2">100% Anonymous</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Senders are completely anonymous. No accounts needed to send. Just
+              pure, honest messages.
+            </p>
+          </div>
+
+          <div
+            class="feature-card glow-border rounded-2xl p-6 reveal"
+            style="background: rgba(18, 18, 26, 0.8)"
+          >
+            <div class="text-3xl mb-4">💬</div>
+            <h3 class="text-lg font-bold text-white mb-2">Public Replies</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Reply to messages publicly. Senders get notified and can view your
+              reply via a private link.
+            </p>
+          </div>
+
+          <div
+            class="feature-card glow-border rounded-2xl p-6 reveal"
+            style="background: rgba(18, 18, 26, 0.8)"
+          >
+            <div class="text-3xl mb-4">🏠</div>
+            <h3 class="text-lg font-bold text-white mb-2">Anonymous Rooms</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Create group rooms for anonymous group chats. Share the link and
+              let the ghosts talk.
+            </p>
+          </div>
+
+          <div
+            class="feature-card glow-border rounded-2xl p-6 reveal"
+            style="background: rgba(18, 18, 26, 0.8)"
+          >
+            <div class="text-3xl mb-4">🛡️</div>
+            <h3 class="text-lg font-bold text-white mb-2">Safe & Moderated</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              AI-powered keyword filtering blocks abusive content. Report and
+              block senders instantly.
+            </p>
+          </div>
+
+          <div
+            class="feature-card glow-border rounded-2xl p-6 reveal"
+            style="background: rgba(18, 18, 26, 0.8)"
+          >
+            <div class="text-3xl mb-4">📱</div>
+            <h3 class="text-lg font-bold text-white mb-2">Install as App</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Add Gwam to your home screen. Works offline, loads instantly —
+              feels like a native app.
+            </p>
+          </div>
+
+          <div
+            class="feature-card glow-border rounded-2xl p-6 reveal"
+            style="background: rgba(18, 18, 26, 0.8)"
+          >
+            <div class="text-3xl mb-4">🎨</div>
+            <h3 class="text-lg font-bold text-white mb-2">
+              3 Beautiful Themes
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed">
+              Gwam Dark, Neon Magenta, or Soft Dark. Switch themes anytime from
+              settings.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SOCIAL PROOF / STATS ──────────────────────────────────────────────── -->
+    <section id="stats" class="relative py-24 px-4">
+      <div class="orb w-72 h-72 bg-cyan-700 opacity-10 bottom-0 left-0"></div>
+      <div class="max-w-5xl mx-auto">
+        <div class="text-center mb-16 reveal">
+          <p
+            class="text-purple-400 text-sm font-semibold uppercase tracking-widest mb-3"
+          >
+            Growing fast
+          </p>
+          <h2 class="text-4xl md:text-5xl font-black text-white">
+            Ghosts don't lie 👻
+          </h2>
+        </div>
+
+        <!-- Stats grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+          <div
+            class="glow-border rounded-2xl p-6 text-center reveal"
+            style="background: rgba(18, 18, 26, 0.8)"
+          >
+            <p class="text-4xl font-black gradient-text" id="stat-users">
+              1.2K+
+            </p>
+            <p class="text-slate-400 text-sm mt-2">Users</p>
+          </div>
+          <div
+            class="glow-border rounded-2xl p-6 text-center reveal"
+            style="background: rgba(18, 18, 26, 0.8)"
+          >
+            <p class="text-4xl font-black gradient-text" id="stat-messages">
+              8K+
+            </p>
+            <p class="text-slate-400 text-sm mt-2">Messages sent</p>
+          </div>
+          <div
+            class="glow-border rounded-2xl p-6 text-center reveal"
+            style="background: rgba(18, 18, 26, 0.8)"
+          >
+            <p class="text-4xl font-black gradient-text" id="stat-rooms">
+              200+
+            </p>
+            <p class="text-slate-400 text-sm mt-2">Rooms created</p>
+          </div>
+          <div
+            class="glow-border rounded-2xl p-6 text-center reveal"
+            style="background: rgba(18, 18, 26, 0.8)"
+          >
+            <p class="text-4xl font-black gradient-text">🇳🇬</p>
+            <p class="text-slate-400 text-sm mt-2">Made in Nigeria</p>
+          </div>
+        </div>
+
+        <!-- WhatsApp bubble mockup -->
+        <div class="flex flex-col md:flex-row items-center gap-8 reveal">
+          <div class="flex-1 max-w-sm">
+            <h3 class="text-2xl font-bold text-white mb-3">
+              Share on WhatsApp in seconds
+            </h3>
+            <p class="text-slate-400 leading-relaxed">
+              Copy your Gwam link and paste it on your WhatsApp status. Watch
+              the messages roll in.
+            </p>
+          </div>
+          <div class="flex-1 max-w-sm w-full">
+            <!-- Fake WhatsApp status mockup -->
+            <div
+              class="rounded-3xl overflow-hidden"
+              style="
+                background: #111b21;
+                border: 1px solid rgba(42, 42, 58, 0.5);
+              "
+            >
+              <!-- Status bar -->
+              <div
+                class="flex items-center gap-3 px-4 py-3"
+                style="border-bottom: 1px solid rgba(42, 42, 58, 0.5)"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold text-sm"
+                >
+                  You
+                </div>
+                <div>
+                  <p class="text-white text-sm font-semibold">My Status</p>
+                  <p class="text-slate-400 text-xs">Just now</p>
+                </div>
+              </div>
+              <!-- Status content -->
+              <div class="p-4">
+                <div
+                  class="wa-bubble px-4 py-3 text-white text-sm mb-3 inline-block"
+                >
+                  Gwam me anything, I reply to all 👻<br />
+                  <span class="text-green-200 text-xs"
+                    >app.gwam.dumostech.com/u/you</span
+                  >
+                </div>
+                <div class="flex gap-2 mt-3">
+                  <div
+                    class="flex-1 rounded-xl px-3 py-2 text-xs text-slate-400"
+                    style="background: rgba(42, 42, 58, 0.5)"
+                  >
+                    👁 47 views
+                  </div>
+                  <div
+                    class="flex-1 rounded-xl px-3 py-2 text-xs text-slate-400"
+                    style="background: rgba(42, 42, 58, 0.5)"
+                  >
+                    💬 12 messages
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CTA ───────────────────────────────────────────────────────────────── -->
+    <section class="relative py-24 px-4 text-center">
+      <div
+        class="orb w-96 h-96 bg-purple-700 opacity-20 top-0 left-1/2 -translate-x-1/2"
+      ></div>
+      <div class="max-w-2xl mx-auto relative z-10 reveal">
+        <div class="animate-float mb-8 inline-block">
+          <svg
+            width="80"
+            height="96"
+            viewBox="0 0 100 120"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M50 8 C22 8 8 28 8 55 L8 102 L21 92 L34 102 L47 92 L60 102 L73 92 L86 102 L92 102 L92 55 C92 28 78 8 50 8Z"
+              fill="url(#cta-grad)"
+            />
+            <defs>
+              <linearGradient
+                id="cta-grad"
+                x1="8"
+                y1="8"
+                x2="92"
+                y2="120"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset="0%" stop-color="#a78bfa" />
+                <stop offset="100%" stop-color="#7c3aed" />
+              </linearGradient>
+            </defs>
+            <ellipse cx="37" cy="52" rx="9" ry="10" fill="#0a0a0f" />
+            <ellipse cx="63" cy="52" rx="9" ry="10" fill="#0a0a0f" />
+            <path
+              d="M39 72 Q50 66 61 72"
+              stroke="#0a0a0f"
+              stroke-width="3.5"
+              stroke-linecap="round"
+              fill="none"
+            />
+          </svg>
+        </div>
+
+        <h2 class="text-4xl md:text-6xl font-black text-white mb-6">
+          Ready to get<br /><span class="gradient-text">Gwam'd?</span>
+        </h2>
+        <p class="text-lg text-slate-400 mb-10">
+          Create your free account in 30 seconds. No credit card. No catch.
+        </p>
+        <a
+          href="https://app.gwam.dumostech.com/register"
+          class="btn-cta inline-block px-10 py-5 rounded-2xl text-lg font-bold text-white"
+        >
+          Create your Gwam link — it's free 👻
+        </a>
+        <p class="text-sm text-slate-500 mt-6">
+          Already have an account?
+          <a
+            href="https://app.gwam.dumostech.com/login"
+            class="text-purple-400 hover:text-purple-300 transition-colors"
+            >Sign in →</a
+          >
+        </p>
+      </div>
+    </section>
+
+    <!-- ─── FOOTER ─────────────────────────────────────────────────────────────── -->
+    <footer
+      class="py-12 px-4"
+      style="border-top: 1px solid rgba(42, 42, 58, 0.5)"
+    >
+      <div
+        class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6"
+      >
+        <div class="flex items-center gap-2">
+          <svg
+            width="22"
+            height="26"
+            viewBox="0 0 100 120"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M50 8 C22 8 8 28 8 55 L8 102 L21 92 L34 102 L47 92 L60 102 L73 92 L86 102 L92 102 L92 55 C92 28 78 8 50 8Z"
+              fill="#7c3aed"
+            />
+            <ellipse cx="37" cy="52" rx="9" ry="10" fill="#0a0a0f" />
+            <ellipse cx="63" cy="52" rx="9" ry="10" fill="#0a0a0f" />
+            <path
+              d="M39 72 Q50 66 61 72"
+              stroke="#0a0a0f"
+              stroke-width="3.5"
+              stroke-linecap="round"
+              fill="none"
+            />
+          </svg>
+          <span class="font-bold text-white">Gwam</span>
+          <span class="text-slate-500 text-sm ml-2">by Dumostech</span>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-slate-500">
+          <a
+            href="https://app.gwam.dumostech.com/terms"
+            class="hover:text-slate-300 transition-colors"
+            >Terms</a
+          >
+          <a
+            href="https://app.gwam.dumostech.com/privacy"
+            class="hover:text-slate-300 transition-colors"
+            >Privacy</a
+          >
+          <a
+            href="mailto:hello@dumostech.com"
+            class="hover:text-slate-300 transition-colors"
+            >Contact</a
+          >
+        </div>
+        <p class="text-slate-600 text-sm">
+          © 2026 Dumostech. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- ─── SCRIPTS ────────────────────────────────────────────────────────────── -->
+    <script>
+      // Scroll reveal
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
+      );
+
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => observer.observe(el));
+
+      // Live stats from API
+      async function fetchStats() {
+        try {
+          const res = await fetch(
+            "https://api.gwam.dumostech.com/api/v1/stats",
+          );
+          if (!res.ok) return;
+          const data = await res.json();
+          const stats = data.data;
+          if (stats?.total_users) {
+            const fmt = (n) =>
+              n >= 1000 ? (n / 1000).toFixed(1) + "K+" : n + "+";
+            const heroCount = document.getElementById("hero-count");
+            const statUsers = document.getElementById("stat-users");
+            const statMessages = document.getElementById("stat-messages");
+            const statRooms = document.getElementById("stat-rooms");
+            if (heroCount) heroCount.textContent = fmt(stats.total_users);
+            if (statUsers) statUsers.textContent = fmt(stats.total_users);
+            if (statMessages)
+              statMessages.textContent = fmt(stats.total_messages);
+            if (statRooms) statRooms.textContent = fmt(stats.total_rooms);
+          }
+        } catch {
+          // Keep default placeholder values
+        }
+      }
+      fetchStats();
+
+      // Smooth nav link scroll
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          const target = document.querySelector(a.getAttribute("href"));
+          if (target)
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+    </script>
+  </body>
+</html>
