@@ -35,15 +35,19 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Normalize: strip trailing slash for comparison (trailingSlash: true adds it)
+  const cleanPath = pathname.replace(/\/$/, "") || "/";
+  const isLoginPage = cleanPath === "/login";
+
   useEffect(() => {
-    if (!isAuthenticated && pathname !== "/login") {
+    if (!isAuthenticated && !isLoginPage) {
       router.push("/login");
     }
-  }, [isAuthenticated, pathname, router]);
+  }, [isAuthenticated, isLoginPage, router]);
 
-  if (!isAuthenticated && pathname !== "/login") return null;
+  if (!isAuthenticated && !isLoginPage) return null;
 
-  if (pathname === "/login") return <>{children}</>;
+  if (isLoginPage) return <>{children}</>;
 
   return (
     <div className="min-h-screen flex bg-slate-900 text-slate-100">
