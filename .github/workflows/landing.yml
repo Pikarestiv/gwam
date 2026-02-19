@@ -1,0 +1,34 @@
+name: Deploy Landing Page
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'landing/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./landing
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to Namecheap (FTP)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./landing/
+          # Deploying to a folder named after the domain to keep it clean.
+          # Ensure your main domain's document root points to 'public_html/gwam.dumostech.com'
+          # OR change this to '/' if your main domain points to 'public_html' directly.
+          server-dir: /gwam.dumostech.com/
+          protocol: ftps
+          exclude: |
+            **/.git*
+            **/.git*/**
