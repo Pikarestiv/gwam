@@ -42,13 +42,7 @@ export default function DashboardPage() {
       <div className="p-8 text-center text-slate-400">Loading stats...</div>
     );
 
-  const stats = data || {
-    total_users: 0,
-    total_messages: 0,
-    total_rooms: 0,
-    blocked_ips: 0,
-    messages_chart: [], // Array of { date, count }
-  };
+  const stats = data || {};
 
   return (
     <div className="space-y-6">
@@ -58,25 +52,25 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard
           title="Total Users"
-          value={stats.total_users}
+          value={stats.users?.total ?? 0}
           icon={Users}
           color="text-blue-500"
         />
         <StatsCard
           title="Total Messages"
-          value={stats.total_messages}
+          value={stats.messages?.all_time ?? 0}
           icon={MessageSquare}
           color="text-purple-500"
         />
         <StatsCard
           title="Active Rooms"
-          value={stats.total_rooms}
+          value={stats.rooms?.active ?? 0}
           icon={Home}
           color="text-green-500"
         />
         <StatsCard
           title="Blocked IPs"
-          value={stats.blocked_ips}
+          value={stats.blocked_ips ?? 0}
           icon={ShieldAlert}
           color="text-red-500"
         />
