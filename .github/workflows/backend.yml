@@ -23,7 +23,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USER }}
           TARGET: "/home/${{ secrets.SSH_USER }}/api.gwam.dumostech.com"
-          EXCLUDE: "/storage/ /vendor/ /.env /node_modules/"
+          EXCLUDE: "/storage/, /vendor/, /.env, /node_modules/"
 
       - name: Run Post-Deploy Commands
         uses: appleboy/ssh-action@v1.0.3
