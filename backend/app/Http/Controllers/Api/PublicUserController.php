@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\NudgeMail;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\RateLimiter;
 
 class PublicUserController extends Controller
 {
@@ -31,5 +33,37 @@ class PublicUserController extends Controller
         'inbox_active' => $user->inbox_active,
       ],
     ]);
+  }
+
+  public function nudge(string $username)
+  {
+    $user = User::where('username', $username)->first();
+
+    if (!$user) {
+      return response()->json(['success' => false, 'message' => 'User not found.'], 404);
+    }
+
+    if ($user->inbox_active) {
+      return response()->json(['success' => false, 'message' => 'Inbox is already active.'], 422);
+    }
+
+    // Rate limit: 1 nudge per IP per user per hour
+    $key = 'nudge:' . request()->ip() . ':' . $user->id;
+    if (RateLimiter::tooManyAttempts($key, 1)) {
+      return response()->json([
+        'success' => false,
+        'message' => 'You already nudged them recently. Try again later.',
+      ], 429);
+    }
+    RateLimiter::hit($key, 3600);
+
+    try {
+      Mail::to($user->email)->send(new NudgeMail($user));
+    }
+    catch (\Exception $e) {
+      Log::error('Nudge mail failed: ' . $e->getMessage());
+    }
+
+    return response()->json(['success' => true, 'message' => 'Nudge sent!']);
   }
 }

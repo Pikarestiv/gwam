@@ -37,6 +37,7 @@ export const messagesApi = {
 // ─── Anonymous Send ────────────────────────────────────────────────────────
 export const sendApi = {
   getProfile: (username: string) => api.get(`/users/${username}/profile`),
+  nudge: (username: string) => api.post(`/users/${username}/nudge`),
   sendMessage: (username: string, data: { content: string }) =>
     api.post(`/users/${username}/messages`, data),
   saveSenderInterest: (messageId: number, email: string) =>

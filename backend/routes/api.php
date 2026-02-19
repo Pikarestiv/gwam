@@ -39,6 +39,7 @@ Route::prefix('v1')->group(function () {
 
         // ─── Public User & Messaging ───────────────────────────────────────
         Route::get('users/{username}/profile', [PublicUserController::class , 'profile']);
+        Route::post('users/{username}/nudge', [PublicUserController::class , 'nudge']);
 
         Route::middleware(['blocked.ip', 'rate.messages', 'content.filter'])
             ->post('users/{username}/messages', [AnonymousMessageController::class , 'send']);
