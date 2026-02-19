@@ -43,7 +43,7 @@ read -p "Enter SSH_USER (e.g., your-server-user): " SSH_USER
 echo "Using generated private key for SSH_PRIVATE_KEY..."
 
 echo ""
-echo "--- 3. Enter FTP Credentials (for Frontend/Admin) ---"
+echo "--- 3. Enter FTP Credentials (for Frontend/Admin/Landing) ---"
 read -p "Enter FTP_SERVER (e.g., server.namecheap.com): " FTP_SERVER
 read -p "Enter FTP_USERNAME: " FTP_USERNAME
 read -s -p "Enter FTP_PASSWORD: " FTP_PASSWORD
