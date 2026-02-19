@@ -46,3 +46,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+
+# Local SSH Keys
+id_rsa_gwam_deploy
+id_rsa_gwam_deploy.pub
