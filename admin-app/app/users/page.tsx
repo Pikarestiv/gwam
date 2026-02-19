@@ -11,7 +11,7 @@ export default function UsersPage() {
   const [search, setSearch] = useState("");
   const qc = useQueryClient();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["admin-users", page, search],
     queryFn: () => adminApi.getUsers(page, search).then((r) => r.data.data),
   });
@@ -55,7 +55,13 @@ export default function UsersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800">
-            {isLoading ? (
+            {isError ? (
+              <tr>
+                <td colSpan={4} className="px-6 py-8 text-center text-red-500">
+                  Failed to load users. Please try again.
+                </td>
+              </tr>
+            ) : isLoading ? (
               <tr>
                 <td
                   colSpan={4}
