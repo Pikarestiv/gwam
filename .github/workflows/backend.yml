@@ -22,6 +22,7 @@ jobs:
           SOURCE: "backend/"
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USER }}
+          REMOTE_PORT: ${{ secrets.SSH_PORT }}
           TARGET: "/home/${{ secrets.SSH_USER }}/api.gwam.dumostech.com"
           EXCLUDE: "/storage/, /vendor/, /.env, /node_modules/"
 
@@ -30,6 +31,7 @@ jobs:
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
+          port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/api.gwam.dumostech.com
