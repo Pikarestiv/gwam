@@ -31,8 +31,17 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-# SPA fallback — serve index.html for all non-file, non-directory requests
-# This handles client-side routing for /u/[username], /room/[code], etc.
+# Dynamic route: /u/[username]/reply/[token] → reply page template (must be before /u/* rule)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^u/[^/]+/reply/[^/]+/?$ /u/_/reply/_/index.html [L,QSA]
+
+# Dynamic route: /u/[username] → send page template
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^u/[^/]+/?$ /u/_/index.html [L,QSA]
+
+# SPA fallback — serve index.html for all other non-file, non-directory requests
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index.html [L,QSA]
