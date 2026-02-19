@@ -42,4 +42,13 @@ class AdminAuthController extends Controller
     $request->user()->currentAccessToken()->delete();
     return response()->json(['success' => true, 'message' => 'Logged out.', 'data' => []]);
   }
+
+  public function me(Request $request)
+  {
+    return response()->json([
+      'success' => true,
+      'message' => 'Admin details.',
+      'data' => $request->user(),
+    ]);
+  }
 }

@@ -104,6 +104,7 @@ Route::prefix('v1')->group(function () {
 
             Route::middleware('auth:admin-sanctum')->group(function () {
                     Route::post('auth/logout', [AdminAuthController::class , 'logout']);
+                    Route::get('auth/me', [AdminAuthController::class , 'me']);
 
                     Route::get('dashboard/stats', [AdminDashboardController::class , 'stats']);
                     Route::get('dashboard/messages-chart', [AdminDashboardController::class , 'messagesChart']);

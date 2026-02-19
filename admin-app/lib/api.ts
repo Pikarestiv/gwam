@@ -29,12 +29,12 @@ api.interceptors.response.use(
 
 export const adminApi = {
   // Auth
-  login: (credentials: any) => api.post("/admin/login", credentials),
-  logout: () => api.post("/admin/logout"),
-  me: () => api.get("/admin/me"),
+  login: (credentials: any) => api.post("/admin/auth/login", credentials),
+  logout: () => api.post("/admin/auth/logout"),
+  me: () => api.get("/admin/auth/me"),
 
   // Dashboard
-  getStats: () => api.get("/admin/stats"),
+  getStats: () => api.get("/admin/dashboard/stats"),
 
   // Users
   getUsers: (page = 1, search = "") =>
