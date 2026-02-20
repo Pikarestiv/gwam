@@ -16,6 +16,7 @@ import {
 import { useNotificationStore } from "@/lib/stores/notificationStore";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { GhostSVG } from "@/components/ui/GhostSVG";
+import { PWAInstallBanner } from "@/components/ui/PWAInstallBanner";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -219,6 +220,7 @@ export function AppShell({
         <main className="flex-1 pb-24 md:pb-0">{children}</main>
       </div>
       <BottomNav />
+      <PWAInstallBanner />
     </div>
   );
 }

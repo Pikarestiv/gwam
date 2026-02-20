@@ -16,14 +16,6 @@ export function PWAInstallBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // Show after 2nd visit, not within 7 days of last dismiss
-    const sevenDays = 7 * 24 * 60 * 60 * 1000;
-    const recentlyDismissed =
-      lastDismissedAt && Date.now() - lastDismissedAt < sevenDays;
-    if (visitCount >= 2 && deferredPrompt && !recentlyDismissed) {
-      setVisible(true);
-    }
-
     // Listen for beforeinstallprompt
     const handler = (e: Event) => {
       e.preventDefault();
@@ -31,6 +23,17 @@ export function PWAInstallBanner() {
     };
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, [setDeferredPrompt]);
+
+  useEffect(() => {
+    // Show after 2nd visit, not within 7 days of last dismiss
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    const recentlyDismissed =
+      lastDismissedAt && Date.now() - lastDismissedAt < sevenDays;
+
+    if (visitCount >= 2 && deferredPrompt && !recentlyDismissed) {
+      setVisible(true);
+    }
   }, [visitCount, deferredPrompt, lastDismissedAt]);
 
   const install = async () => {
