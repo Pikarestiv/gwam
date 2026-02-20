@@ -1,3 +1,5 @@
+"use client";
+
 import { GhostSVG } from "@/components/ui/GhostSVG";
 
 export default function MaintenancePage() {
