@@ -61,6 +61,7 @@ export const adminApi = {
   blockIp: (ip: string) => api.post("/admin/blocked-ips", { ip }),
 
   // Settings
+  // Settings
   getSettings: () => api.get("/admin/settings"),
   updateSettings: (data: any) => api.patch("/admin/settings", data),
 };

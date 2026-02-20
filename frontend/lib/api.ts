@@ -17,13 +17,16 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle 401 — auto logout
+// Handle 401 and 503
 api.interceptors.response.use(
   (res) => res,
   (error) => {
     if (error.response?.status === 401) {
       useAuthStore.getState().logout();
       if (typeof window !== "undefined") window.location.href = "/login";
+    }
+    if (error.response?.status === 503) {
+      if (typeof window !== "undefined") window.location.href = "/maintenance";
     }
     return Promise.reject(error);
   },
