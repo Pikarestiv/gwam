@@ -85,12 +85,12 @@ export default function SettingsPage() {
           >
             <Moon size={14} /> Theme
           </h2>
-          <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-2 gap-3">
             {themes.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setTheme(t.id)}
-                className="card flex items-center gap-3 text-left transition-all"
+                className="card p-3 flex flex-col items-center gap-2 text-center transition-all"
                 style={{
                   borderColor:
                     theme === t.id
@@ -103,31 +103,23 @@ export default function SettingsPage() {
                 }}
               >
                 <div
-                  className="w-8 h-8 rounded-full flex-shrink-0"
+                  className="w-10 h-10 rounded-full flex-shrink-0 relative"
                   style={{ background: t.color }}
-                />
+                >
+                  {theme === t.id && (
+                    <div className="absolute inset-0 flex items-center justify-center text-white text-sm font-bold bg-black/20 rounded-full">
+                      ✓
+                    </div>
+                  )}
+                </div>
                 <div>
                   <p
-                    className="font-medium text-sm"
+                    className="font-medium text-xs leading-tight"
                     style={{ color: "var(--color-text)" }}
                   >
                     {t.label}
                   </p>
-                  <p
-                    className="text-xs"
-                    style={{ color: "var(--color-muted)" }}
-                  >
-                    {t.desc}
-                  </p>
                 </div>
-                {theme === t.id && (
-                  <span
-                    className="ml-auto text-xs font-bold"
-                    style={{ color: "var(--color-primary)" }}
-                  >
-                    ✓
-                  </span>
-                )}
               </button>
             ))}
           </div>
@@ -157,12 +149,21 @@ export default function SettingsPage() {
                         ? "var(--color-primary-glow)"
                         : "var(--color-surface-2)",
                     color:
-                      retention === opt.value
-                        ? "var(--color-primary)"
-                        : "var(--color-text)",
+                      opt.value === 0 && retention !== 0
+                        ? "var(--color-subtle)"
+                        : retention === opt.value
+                          ? "var(--color-primary)"
+                          : "var(--color-text)",
                   }}
                 >
-                  {opt.label}
+                  <span className="flex items-center gap-2">
+                    {opt.label}
+                    {opt.value === 0 && (
+                      <span className="badge-primary px-1.5 py-0.5 text-[10px]">
+                        Premium
+                      </span>
+                    )}
+                  </span>
                   {retention === opt.value && <span>✓</span>}
                 </button>
               ))}
