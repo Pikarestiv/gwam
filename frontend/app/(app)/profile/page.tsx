@@ -9,7 +9,7 @@ import { User, Copy, Check, Share2 } from "lucide-react";
 import Link from "next/link";
 
 export default function ProfilePage() {
-  const { user, setUser } = useAuthStore();
+  const { user, setUser, isVerified } = useAuthStore();
   const [form, setForm] = useState({
     name: user?.name || "",
     bio: user?.bio || "",
@@ -65,9 +65,7 @@ export default function ProfilePage() {
           <p className="text-sm" style={{ color: "var(--color-muted)" }}>
             @{user.username}
           </p>
-          {!user.email_verified_at && (
-            <span className="badge-danger mt-2">Unverified</span>
-          )}
+          {!isVerified && <span className="badge-danger mt-2">Unverified</span>}
         </div>
 
         {/* Gwam link */}
@@ -159,7 +157,7 @@ export default function ProfilePage() {
           <p className="text-sm mt-0.5" style={{ color: "var(--color-text)" }}>
             {user.email}
           </p>
-          {!user.email_verified_at && (
+          {!isVerified && (
             <Link
               href="/verify-email"
               className="text-xs mt-2 block"
