@@ -34,17 +34,23 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Normalize: strip trailing slash for comparison (trailingSlash: true adds it)
   const cleanPath = pathname.replace(/\/$/, "") || "/";
   const isLoginPage = cleanPath === "/login";
 
   useEffect(() => {
-    if (!isAuthenticated && !isLoginPage) {
+    if (isMounted && !isAuthenticated && !isLoginPage) {
       router.push("/login");
     }
-  }, [isAuthenticated, isLoginPage, router]);
+  }, [isMounted, isAuthenticated, isLoginPage, router]);
 
+  if (!isMounted) return null; // Prevent SSR flash
   if (!isAuthenticated && !isLoginPage) return null;
 
   if (isLoginPage) return <>{children}</>;

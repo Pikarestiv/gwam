@@ -22,6 +22,11 @@ export const useAdminStore = create<AdminState>()(
     }),
     {
       name: "gwam-admin-storage",
+      onRehydrateStorage: () => (state) => {
+        if (state && state.admin && state.token) {
+          state.isAuthenticated = true;
+        }
+      },
     },
   ),
 );
