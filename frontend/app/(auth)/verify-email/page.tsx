@@ -33,10 +33,16 @@ export default function VerifyEmailPage() {
 
   const handleResend = async () => {
     setResending(true);
+    setError("");
     try {
       await authApi.resendVerification();
       setResent(true);
-    } catch {}
+      setTimeout(() => setResent(false), 5000);
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message || "Failed to resend code. Try again.",
+      );
+    }
     setResending(false);
   };
 
