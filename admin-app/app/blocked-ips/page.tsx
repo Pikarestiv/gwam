@@ -11,7 +11,7 @@ export default function BlockedIpsPage() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-blocked-ips"],
-    queryFn: () => adminApi.getBlockedIps().then((r) => r.data.data),
+    queryFn: () => adminApi.getBlockedIps().then((r) => r.data.data.data),
   });
 
   const unblockMutation = useMutation({
