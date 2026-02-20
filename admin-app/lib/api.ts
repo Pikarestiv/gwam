@@ -41,13 +41,15 @@ export const adminApi = {
     api.get(`/admin/users?page=${page}&search=${search}`),
   getUser: (id: number) => api.get(`/admin/users/${id}`),
   updateUserStatus: (id: number, status: any) =>
-    api.put(`/admin/users/${id}/status`, status),
+    api.patch(
+      `/admin/users/${id}/${status.is_suspended ? "suspend" : "unsuspend"}`,
+    ),
 
   // Messages
   getFlaggedMessages: (page = 1) =>
     api.get(`/admin/messages/flagged?page=${page}`),
   deleteMessage: (id: number) => api.delete(`/admin/messages/${id}`),
-  approveMessage: (id: number) => api.post(`/admin/messages/${id}/approve`),
+  approveMessage: (id: number) => api.patch(`/admin/messages/${id}/approve`),
 
   // Rooms
   getRooms: (page = 1) => api.get(`/admin/rooms?page=${page}`),
@@ -60,5 +62,5 @@ export const adminApi = {
 
   // Settings
   getSettings: () => api.get("/admin/settings"),
-  updateSettings: (data: any) => api.put("/admin/settings", data),
+  updateSettings: (data: any) => api.patch("/admin/settings", data),
 };

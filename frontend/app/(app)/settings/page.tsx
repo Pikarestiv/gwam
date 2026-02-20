@@ -32,9 +32,9 @@ const themes = [
 
 const retentionOptions = [
   { value: 1, label: "1 month" },
+  { value: 2, label: "2 months (default)" },
   { value: 3, label: "3 months" },
-  { value: 6, label: "6 months (default)" },
-  { value: 12, label: "1 year" },
+  { value: 0, label: "Never delete" },
 ];
 
 export default function SettingsPage() {
@@ -42,7 +42,7 @@ export default function SettingsPage() {
   const { user, logout } = useAuthStore();
   const { theme, setTheme } = useThemeStore();
   const [retention, setRetention] = useState(
-    user?.message_retention_months || 6,
+    user?.message_retention_months ?? 2,
   );
   const [saved, setSaved] = useState(false);
 
@@ -166,16 +166,6 @@ export default function SettingsPage() {
                   {retention === opt.value && <span>✓</span>}
                 </button>
               ))}
-              <button
-                className="flex items-center justify-between px-3 py-2 rounded-xl text-sm"
-                style={{
-                  background: "var(--color-surface-2)",
-                  color: "var(--color-subtle)",
-                }}
-              >
-                Never delete{" "}
-                <span className="badge-primary text-xs">Premium</span>
-              </button>
             </div>
           </div>
         </section>

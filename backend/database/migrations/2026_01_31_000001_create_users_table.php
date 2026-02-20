@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
@@ -19,7 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->boolean('inbox_active')->default(false);
             $table->enum('theme_preference', ['gwam_dark', 'neon_magenta', 'soft_dark'])->default('gwam_dark');
-            $table->tinyInteger('message_retention_months')->default(6);
+            $table->tinyInteger('message_retention_months')->default(2);
             $table->boolean('is_suspended')->default(false);
             $table->text('suspended_reason')->nullable();
             $table->timestamp('suspended_at')->nullable();
