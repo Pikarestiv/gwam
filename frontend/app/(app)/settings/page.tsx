@@ -28,6 +28,24 @@ const themes = [
     desc: "Lavender · Mint green",
     color: "#a78bfa",
   },
+  {
+    id: "lemon_black",
+    label: "Lemon Lime",
+    desc: "Lime green · Lemon yellow",
+    color: "#a3e635",
+  },
+  {
+    id: "orange_black",
+    label: "Solar Flare",
+    desc: "Vibrant orange · Sun yellow",
+    color: "#f97316",
+  },
+  {
+    id: "light_ghost",
+    label: "Light Ghost",
+    desc: "Crisp white · Indigo",
+    color: "#f4f4f5",
+  },
 ] as const;
 
 const retentionOptions = [

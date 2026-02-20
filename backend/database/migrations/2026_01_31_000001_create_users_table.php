@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->text('bio')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->boolean('inbox_active')->default(false);
-            $table->enum('theme_preference', ['gwam_dark', 'neon_magenta', 'soft_dark'])->default('gwam_dark');
+            $table->string('theme_preference')->default('gwam_dark');
             $table->tinyInteger('message_retention_months')->default(2);
             $table->boolean('is_suspended')->default(false);
             $table->text('suspended_reason')->nullable();

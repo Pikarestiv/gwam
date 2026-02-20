@@ -1,7 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type Theme = "gwam_dark" | "neon_magenta" | "soft_dark";
+type Theme =
+  | "gwam_dark"
+  | "neon_magenta"
+  | "soft_dark"
+  | "lemon_black"
+  | "orange_black"
+  | "light_ghost";
 
 interface ThemeState {
   theme: Theme;

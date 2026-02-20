@@ -56,6 +56,57 @@
   --color-warning: #f6ad55;
 }
 
+/* ─── Theme: Lemon / Lime Black ────────────────────────────────────────────── */
+[data-theme="lemon_black"] {
+  --color-bg: #0d110d;
+  --color-surface: #141a14;
+  --color-surface-2: #1b241b;
+  --color-border: #2c3a2c;
+  --color-primary: #a3e635; /* Lime 400 */
+  --color-primary-glow: rgba(163, 230, 53, 0.4);
+  --color-secondary: #fef08a; /* Yellow 200 */
+  --color-text: #f7fee7;
+  --color-muted: #bef264;
+  --color-subtle: #65a30d;
+  --color-success: #84cc16;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+}
+
+/* ─── Theme: Orange / Yellow Black ─────────────────────────────────────────── */
+[data-theme="orange_black"] {
+  --color-bg: #140d05;
+  --color-surface: #1c1107;
+  --color-surface-2: #2b1a0b;
+  --color-border: #3f2610;
+  --color-primary: #f97316; /* Orange 500 */
+  --color-primary-glow: rgba(249, 115, 22, 0.4);
+  --color-secondary: #facc15; /* Yellow 400 */
+  --color-text: #fff7ed;
+  --color-muted: #fdba74;
+  --color-subtle: #c2410c;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-warning: #eab308;
+}
+
+/* ─── Theme: Light Ghost ───────────────────────────────────────────────────── */
+[data-theme="light_ghost"] {
+  --color-bg: #fafafa;
+  --color-surface: #ffffff;
+  --color-surface-2: #f4f4f5;
+  --color-border: #e4e4e7;
+  --color-primary: #6366f1; /* Indigo 500 */
+  --color-primary-glow: rgba(99, 102, 241, 0.3);
+  --color-secondary: #ec4899; /* Pink 500 */
+  --color-text: #18181b;
+  --color-muted: #52525b;
+  --color-subtle: #a1a1aa;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+}
+
 /* ─── Base ────────────────────────────────────────────────────────────────── */
 * {
   box-sizing: border-box;
