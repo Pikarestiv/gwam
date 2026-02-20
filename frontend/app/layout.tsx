@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -58,6 +59,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const umamiScriptUrl = process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL;
+  const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+
   return (
     <html lang="en" data-theme="gwam_dark" suppressHydrationWarning>
       <head>
@@ -69,6 +73,13 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {umamiScriptUrl && umamiWebsiteId && (
+          <Script
+            src={umamiScriptUrl}
+            data-website-id={umamiWebsiteId}
+            strategy="afterInteractive"
+          />
+        )}
         <Providers>{children}</Providers>
       </body>
     </html>
