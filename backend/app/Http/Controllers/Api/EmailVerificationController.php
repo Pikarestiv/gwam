@@ -65,10 +65,26 @@ class EmailVerificationController extends Controller
 
     \DB::table('email_verification_tokens')->where('user_id', $user->id)->delete();
 
+    $user->refresh();
+
     return response()->json([
       'success' => true,
       'message' => 'Email verified! Your Gwam inbox is now active.',
-      'data' => ['inbox_active' => true],
+      'data' => [
+        'user' => [
+          'id' => $user->id,
+          'name' => $user->name,
+          'username' => $user->username,
+          'email' => $user->email,
+          'avatar_seed' => $user->avatar_seed,
+          'bio' => $user->bio,
+          'inbox_active' => $user->inbox_active,
+          'is_verified' => $user->isVerified(),
+          'theme_preference' => $user->theme_preference,
+          'message_retention_months' => $user->message_retention_months,
+          'created_at' => $user->created_at,
+        ],
+      ],
     ]);
   }
 
@@ -88,25 +104,34 @@ class EmailVerificationController extends Controller
       ->where('user_id', $user->id)
       ->first();
 
-    if ($existing && now()->diffInMinutes($existing->created_at) < 2) {
+    if ($existing && now()->diffInSeconds($existing->updated_at) < 120) {
       return response()->json([
         'success' => false,
         'message' => 'Please wait before requesting another code.',
       ], 429);
     }
 
-    $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-
-    \DB::table('email_verification_tokens')->updateOrInsert(
-    ['user_id' => $user->id],
-    ['token' => $otp, 'expires_at' => now()->addHours(24), 'created_at' => now(), 'updated_at' => now()]
-    );
+    // Reuse existing OTP if still valid, otherwise generate new one
+    if ($existing && now()->isBefore($existing->expires_at)) {
+      $otp = $existing->token;
+      // Update the timestamp so rate limit works correctly
+      \DB::table('email_verification_tokens')
+        ->where('user_id', $user->id)
+        ->update(['updated_at' => now()]);
+    }
+    else {
+      $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+      \DB::table('email_verification_tokens')->updateOrInsert(
+      ['user_id' => $user->id],
+      ['token' => $otp, 'expires_at' => now()->addMinutes(10), 'created_at' => now(), 'updated_at' => now()]
+      );
+    }
 
     try {
-      \Mail::to($user->email)->send(new \App\Mail\VerificationOtpMail($otp, $user->name));
+      Mail::to($user->email)->send(new VerificationOtpMail($otp, $user->name));
     }
     catch (\Exception $e) {
-      \Log::error('OTP resend failed: ' . $e->getMessage());
+      Log::error('OTP resend failed: ' . $e->getMessage());
     }
 
     return response()->json([

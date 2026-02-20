@@ -17,7 +17,7 @@
       style="background: #0a0a0f; border: 2px solid #7c3aed; border-radius: 12px; padding: 24px; font-size: 36px; font-weight: bold; letter-spacing: 12px; color: #7c3aed; margin-bottom: 24px;">
       {{ $otp }}
     </div>
-    <p style="color: #64748b; font-size: 13px;">This code expires in 24 hours. If you didn't create a Gwam account,
+    <p style="color: #64748b; font-size: 13px;">This code expires in 30 minutes. If you didn't create a Gwam account,
       ignore this email.</p>
     <hr style="border: none; border-top: 1px solid #1e293b; margin: 24px 0;">
     <p style="color: #475569; font-size: 12px;">Made with 💜 by <a href="https://dumostech.com"

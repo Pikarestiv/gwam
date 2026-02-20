@@ -209,7 +209,7 @@ class AuthController extends Controller
 
     \DB::table('email_verification_tokens')->updateOrInsert(
     ['user_id' => $user->id],
-    ['token' => $otp, 'expires_at' => now()->addHours(24), 'created_at' => now(), 'updated_at' => now()]
+    ['token' => $otp, 'expires_at' => now()->addMinutes(30), 'created_at' => now(), 'updated_at' => now()]
     );
 
     try {
