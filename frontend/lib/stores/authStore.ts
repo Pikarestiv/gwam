@@ -8,11 +8,12 @@ export interface User {
   email: string;
   avatar_seed: string;
   bio: string | null;
-  email_verified_at: string | null;
+  email_verified_at?: string | null;
   inbox_active: boolean;
+  is_verified?: boolean;
   theme_preference: "gwam_dark" | "neon_magenta" | "soft_dark";
   message_retention_months: number;
-  is_suspended: boolean;
+  is_suspended?: boolean;
 }
 
 interface AuthState {
@@ -37,9 +38,21 @@ export const useAuthStore = create<AuthState>()(
           user,
           token,
           isAuthenticated: true,
-          isVerified: !!user.email_verified_at,
+          isVerified: !!(
+            user.is_verified ||
+            user.inbox_active ||
+            user.email_verified_at
+          ),
         }),
-      setUser: (user) => set({ user, isVerified: !!user.email_verified_at }),
+      setUser: (user) =>
+        set({
+          user,
+          isVerified: !!(
+            user.is_verified ||
+            user.inbox_active ||
+            user.email_verified_at
+          ),
+        }),
       logout: () =>
         set({
           user: null,
@@ -51,6 +64,16 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "gwam-auth",
       partialize: (state) => ({ user: state.user, token: state.token }),
+      onRehydrateStorage: () => (state) => {
+        if (state && state.user && state.token) {
+          state.isAuthenticated = true;
+          state.isVerified = !!(
+            state.user.is_verified ||
+            state.user.inbox_active ||
+            state.user.email_verified_at
+          );
+        }
+      },
     },
   ),
 );
