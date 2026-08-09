@@ -35,9 +35,15 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/api.gwam.dumostech.com
-            composer install --no-dev --optimize-autoloader
-            php artisan migrate --force
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
-            php artisan queue:restart
+            PHP_BIN=/opt/alt/php81/usr/bin/php
+            if [ ! -x "$PHP_BIN" ]; then echo "PHP 8.1 CLI not found at $PHP_BIN - check installed alt-php versions" && exit 1; fi
+            if [ ! -f "$HOME/bin/composer.phar" ]; then
+              mkdir -p "$HOME/bin"
+              curl -sS https://getcomposer.org/installer | "$PHP_BIN" -- --install-dir="$HOME/bin" --filename=composer.phar
+            fi
+            "$PHP_BIN" "$HOME/bin/composer.phar" install --no-dev --optimize-autoloader
+            "$PHP_BIN" artisan migrate --force
+            "$PHP_BIN" artisan config:cache
+            "$PHP_BIN" artisan route:cache
+            "$PHP_BIN" artisan view:cache
+            "$PHP_BIN" artisan queue:restart
