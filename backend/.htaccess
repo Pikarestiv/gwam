@@ -1,7 +1,7 @@
-# Force PHP 8.1 on cPanel/EasyApache4 shared hosting
-<FilesMatch \.php$>
-    SetHandler application/x-httpd-ea-php81
-</FilesMatch>
+# Force PHP 8.1 (CloudLinux alt-php via LiteSpeed)
+<IfModule Litespeed>
+    AddHandler application/x-httpd-alt-php81___lsphp .php
+</IfModule>
 
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
