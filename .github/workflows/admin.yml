@@ -39,7 +39,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./admin-app/out/
-          server-dir: /admin.gwam.dumostech.com/
+          server-dir: /gwam.dumostech.com/admin/
           protocol: ftps
           exclude: |
             **/.git*

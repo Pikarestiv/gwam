@@ -2,6 +2,7 @@
 const nextConfig = {
   output: "export",
   trailingSlash: true,
+  basePath: "/admin",
   images: {
     unoptimized: true, // Required for static export
     domains: ["api.dicebear.com"],

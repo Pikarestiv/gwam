@@ -83,7 +83,7 @@ This monikerrepo contains three distinct applications:
 The project includes CI/CD workflows for automated deployment to Namecheap:
 
 - **Frontend**: Pushes `frontend/out/` via FTP to `app.gwam.dumostech.com`
-- **Admin**: Pushes `admin-app/out/` via FTP to `admin.gwam.dumostech.com`
+- **Admin**: Pushes `admin-app/out/` via FTP to `gwam.dumostech.com/admin`
 - **Backend**: Pushes `backend/` via SSH/Rsync to `api.gwam.dumostech.com` and runs migrations
 
 Set the following secrets in your GitHub repository:
