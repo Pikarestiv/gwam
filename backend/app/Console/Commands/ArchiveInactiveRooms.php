@@ -8,10 +8,19 @@ use Illuminate\Console\Command;
 class ArchiveInactiveRooms extends Command
 {
   protected $signature = 'gwam:archive-inactive-rooms';
-  protected $description = 'Archive rooms inactive for 30+ days. Delete rooms archived for 6+ months.';
+  protected $description = 'Archive rooms inactive for 30+ days or past their expiry. Delete rooms archived for 6+ months.';
 
   public function handle(): void
   {
+    // Archive expired rooms
+    $expired = Room::where('is_active', true)
+      ->whereNull('archived_at')
+      ->whereNotNull('expires_at')
+      ->where('expires_at', '<=', now())
+      ->update(['archived_at' => now(), 'is_active' => false]);
+
+    $this->info("Archived {$expired} expired rooms.");
+
     // Archive rooms inactive for 30 days
     $archived = Room::where('is_active', true)
       ->whereNull('archived_at')

@@ -49,8 +49,12 @@ export const sendApi = {
 export const roomsApi = {
   list: () => api.get("/rooms"),
   get: (code: string) => api.get(`/rooms/${code}`),
-  create: (data: { name: string; topic?: string; password?: string }) =>
-    api.post("/rooms", data),
+  create: (data: {
+    name: string;
+    topic?: string;
+    password?: string;
+    duration_hours?: number;
+  }) => api.post("/rooms", data),
   update: (
     id: number,
     data: Partial<{

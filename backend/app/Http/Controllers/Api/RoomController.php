@@ -18,7 +18,7 @@ class RoomController extends Controller
   {
     $room = Room::where('code', $code)->where('is_active', true)->first();
 
-    if (!$room) {
+    if (!$room || $room->isExpired()) {
       return response()->json([
         'success' => false,
         'message' => 'Room not found or is closed.',
@@ -43,6 +43,7 @@ class RoomController extends Controller
           'is_readonly' => $room->is_readonly,
           'has_password' => !is_null($room->password_hash),
           'owner_username' => $room->owner->username,
+          'expires_at' => $room->expires_at,
         ],
         'messages' => $messages,
       ],
@@ -52,7 +53,21 @@ class RoomController extends Controller
   // Public: send room message
   public function sendMessage(Request $request, string $code)
   {
-    $room = Room::where('code', $code)->where('is_active', true)->firstOrFail();
+    $room = Room::where('code', $code)->where('is_active', true)->first();
+
+    if (!$room) {
+      return response()->json([
+        'success' => false,
+        'message' => 'Room not found or is closed.',
+      ], 404);
+    }
+
+    if ($room->isExpired()) {
+      return response()->json([
+        'success' => false,
+        'message' => 'This room has expired.',
+      ], 404);
+    }
 
     if ($room->is_readonly) {
       return response()->json([
@@ -87,6 +102,12 @@ class RoomController extends Controller
       'Ghost Rider 🏍️', 'Ghost Whisperer 👻', 'Ghost Town 🏚️',
       'Ghost Protocol 🔐', 'Ghost Ship 🚢', 'Ghost Light 💡',
       'Ghost Signal 📡', 'Ghost Runner 🏃', 'Ghost Hacker 💻',
+      'Ghost Note 🎵', 'Ghost King 👑', 'Ghost Queen 💅',
+      'Ghost Detective 🔍', 'Ghost Chef 🍳', 'Ghost Artist 🎨',
+      'Ghost Gamer 🎮', 'Ghost Pilot ✈️', 'Ghost Sailor ⚓',
+      'Ghost Wizard 🧙', 'Ghost Ninja 🥷', 'Ghost Astronaut 🚀',
+      'Ghost Poet 📜', 'Ghost DJ 🎧', 'Ghost Farmer 🌾',
+      'Ghost Doctor 🩺', 'Ghost Teacher 📚', 'Ghost Explorer 🧭',
     ];
 
     // Consistent ghost name per session token
@@ -150,6 +171,7 @@ class RoomController extends Controller
       'name' => 'required|string|max:100',
       'topic' => 'nullable|string|max:255',
       'password' => 'nullable|string|min:4',
+      'duration_hours' => 'nullable|integer|in:' . implode(',', array_keys(Room::DURATION_OPTIONS)),
     ]);
 
     if ($validator->fails()) {
@@ -160,11 +182,23 @@ class RoomController extends Controller
       ], 422);
     }
 
+    $durationHours = (int) ($request->duration_hours ?? 24);
+
+    // Paid tiers aren't available yet — reject anything above the free 24h option.
+    if (Room::DURATION_OPTIONS[$durationHours] !== 'free') {
+      return response()->json([
+        'success' => false,
+        'message' => 'Longer room durations require a paid plan (coming soon). Use 24 hours for now.',
+        'errors' => ['duration_hours' => ['This duration requires a paid plan.']],
+      ], 422);
+    }
+
     $room = Room::create([
       'owner_id' => $request->user()->id,
       'name' => $request->name,
       'topic' => $request->topic,
       'password_hash' => $request->password ?Hash::make($request->password) : null,
+      'expires_at' => now()->addHours($durationHours),
     ]);
 
     return response()->json([

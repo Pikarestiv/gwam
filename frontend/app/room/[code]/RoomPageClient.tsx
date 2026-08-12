@@ -10,6 +10,7 @@ import {
   generateGhostAlias,
   generateSessionToken,
   formatRelativeTime,
+  formatExpiryCountdown,
 } from "@/lib/utils";
 import { GhostSVG } from "@/components/ui/GhostSVG";
 import { CookieConsentBanner } from "@/components/ui/CookieConsentBanner";
@@ -109,6 +110,11 @@ export default function RoomPageClient() {
           {room.topic && (
             <p className="text-xs" style={{ color: "var(--color-muted)" }}>
               {room.topic}
+            </p>
+          )}
+          {room.expires_at && (
+            <p className="text-xs" style={{ color: "var(--color-subtle)" }}>
+              {formatExpiryCountdown(room.expires_at)}
             </p>
           )}
         </div>

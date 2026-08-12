@@ -21,6 +21,20 @@ export function formatRelativeTime(dateStr: string): string {
   return date.toLocaleDateString("en-NG", { day: "numeric", month: "short" });
 }
 
+export function formatExpiryCountdown(dateStr?: string | null): string | null {
+  if (!dateStr) return null;
+  const diff = new Date(dateStr).getTime() - Date.now();
+  if (diff <= 0) return "Expired";
+
+  const minutes = Math.floor(diff / 60_000);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) return `Expires in ${days}d`;
+  if (hours > 0) return `Expires in ${hours}h`;
+  return `Expires in ${minutes}m`;
+}
+
 export function generateGhostAlias(): string {
   const adjectives = [
     "Pepper",

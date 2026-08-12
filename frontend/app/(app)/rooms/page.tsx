@@ -9,7 +9,7 @@ import { Plus, Users, Share2, Lock, MessageSquare } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { VerificationBanner } from "@/components/ui/VerificationBanner";
 import { roomsApi } from "@/lib/services";
-import { formatRelativeTime } from "@/lib/utils";
+import { formatRelativeTime, formatExpiryCountdown } from "@/lib/utils";
 import { useAuthStore } from "@/lib/stores/authStore";
 
 export default function RoomsPage() {
@@ -127,6 +127,8 @@ export default function RoomsPage() {
                       {formatRelativeTime(
                         room.last_activity_at || room.created_at,
                       )}
+                      {room.expires_at &&
+                        ` · ${formatExpiryCountdown(room.expires_at)}`}
                     </p>
                   </div>
                   <Share2 size={16} style={{ color: "var(--color-muted)" }} />
