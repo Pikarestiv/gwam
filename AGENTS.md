@@ -52,11 +52,18 @@ Each has its own `package.json`/`composer.json` and its own GitHub Actions workf
 
 6. Production `.env` files on the server are **not** deployed by CI (`EXCLUDE` list in `backend.yml` excludes `/.env`). They're maintained manually and can drift from `.env.example`. When you change an env var's meaning or add a new one, update `.env.example` for documentation, but remember the actual server value needs manual updating too — it won't happen automatically.
 
+## Umami analytics (self-hosted, `docs/umami-setup.md`)
+
+Umami runs as its own Node.js app on the same Namecheap box, via cPanel's "Setup Node.js App" (Phusion Passenger) — separate from the four main apps above, not deployed by any GitHub Actions workflow. Two shared-hosting gotchas specific to this piece:
+
+- **Don't run `yarn install` on the server** — Namecheap's inode limits cause `sdb1: write failed, user file limit reached`. Use `npm install --legacy-peer-deps` for any on-server install.
+- **Prisma's WASM engine OOMs on this host.** Set `PRISMA_CLIENT_ENGINE_TYPE=library` in the environment before building/running anything Prisma-based (Umami uses Prisma), to force the C-library engine instead.
+
 ## Backend architecture (`backend/`)
 
 - Laravel 10, Sanctum for **token-based** (not cookie/session) auth.
 - Models: `User`, `Admin`, `Room`, `RoomMessage`, `Message` (anonymous inbox messages), `Notification`, `BlockedIp`, `Report`, `Announcement`, `SenderInterest`, `RevealInterest`.
-- Key middleware: `ContentFilter` (blocklist filtering), `RateLimitMessages`, `CheckBlockedIp`, `VerifiedOnly`, `PreventRequestsDuringMaintenance` (whitelists `/api/v1/admin/*` so the dashboard can't lock itself out).
+- Key middleware: `ContentFilter` (blocklist filtering), `RateLimitMessages`, `CheckBlockedIp`, `VerifiedOnly`, `PreventRequestsDuringMaintenance` (whitelists `/api/v1/admin/*` so the dashboard can't lock itself out). Maintenance mode itself is toggled from the admin settings endpoint (`AdminSettingsController`) calling `Artisan::call('down'/'up')` under the hood, not a raw SSH command.
 - Rooms (`RoomController`): public `show`/`sendMessage` by room `code` (no auth needed to read/post — anonymous "ghost" identity derived from a client-generated `session_token`, consistently mapped to a ghost name via `crc32($token) % count($ghostNames)`); authenticated `index`/`store`/`update`/`destroy` by numeric `id` for the owner. Rooms have an `expires_at` (added 2026-08; free tier fixed at 24h via `Room::DURATION_OPTIONS`, longer durations rejected server-side pending a real payment system — don't build client-side-only enforcement for this). Expired/inactive rooms both 404 the same way; keep `show()` and `sendMessage()` error shapes consistent when you touch either (they diverged once already — `sendMessage()` used to throw via `firstOrFail()` while `show()` returned a custom JSON body for the same "not found" case).
 - `gwam:archive-inactive-rooms` (scheduled daily) handles both 30-day-inactive archival and `expires_at`-based archival; hard-deletes rooms archived 6+ months.
 - No test suite of consequence (`backend/tests/` has 4 files, default Laravel skeleton). Don't assume test coverage protects against regressions here — verify manually.
