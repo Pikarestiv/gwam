@@ -20,7 +20,19 @@ const GHOST_ALIAS = generateGhostAlias();
 
 export default function RoomPageClient() {
   const params = useParams();
-  const code = params.code as string;
+  // In static export, useParams() returns the pre-built placeholder '_'
+  // when served via .htaccess for a real room code. Read from window.location instead.
+  const rawCode = params.code as string;
+  const code = (() => {
+    if (typeof window !== "undefined" && rawCode === "_") {
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      const roomIndex = parts.indexOf("room");
+      if (roomIndex !== -1 && parts[roomIndex + 1] && parts[roomIndex + 1] !== "_") {
+        return parts[roomIndex + 1];
+      }
+    }
+    return rawCode;
+  })();
   const qc = useQueryClient();
   const [content, setContent] = useState("");
   const [copied, setCopied] = useState(false);
