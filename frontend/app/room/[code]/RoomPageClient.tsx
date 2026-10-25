@@ -7,16 +7,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Send, Copy } from "lucide-react";
 import { roomsApi } from "@/lib/services";
 import {
-  generateGhostAlias,
-  generateSessionToken,
+  getSessionToken,
   formatRelativeTime,
   formatExpiryCountdown,
 } from "@/lib/utils";
 import { GhostSVG } from "@/components/ui/GhostSVG";
 import { CookieConsentBanner } from "@/components/ui/CookieConsentBanner";
-
-const SESSION_TOKEN = generateSessionToken();
-const GHOST_ALIAS = generateGhostAlias();
 
 export default function RoomPageClient() {
   const params = useParams();
@@ -34,15 +30,24 @@ export default function RoomPageClient() {
     return rawCode;
   })();
   const qc = useQueryClient();
+  const [sessionToken] = useState(getSessionToken);
+  const [password, setPassword] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
   const [content, setContent] = useState("");
   const [copied, setCopied] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ["room", code],
-    queryFn: () => roomsApi.get(code).then((r) => r.data.data),
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["room", code, password],
+    queryFn: () =>
+      roomsApi
+        .get(code, password, sessionToken)
+        .then((r) => r.data.data),
     refetchInterval: 30_000,
+    retry: false,
   });
+  const needsPassword =
+    (error as any)?.response?.data?.data?.requires_password === true;
 
   const room = data?.room;
   const messages = data?.messages || [];
@@ -53,12 +58,14 @@ export default function RoomPageClient() {
 
   const sendMutation = useMutation({
     mutationFn: () =>
-      roomsApi.sendMessage(code, { content, session_token: SESSION_TOKEN }),
+      roomsApi.sendMessage(
+        code,
+        { content, session_token: sessionToken },
+        password,
+      ),
     onSuccess: () => {
       setContent("");
-      qc.invalidateQueries({ queryKey: ["room", code] });
-      if (typeof window !== "undefined" && (window as any).umami)
-        (window as any).umami.track("room_message_sent");
+      qc.invalidateQueries({ queryKey: ["room", code, password] });
     },
   });
 
@@ -80,6 +87,39 @@ export default function RoomPageClient() {
         >
           <GhostSVG size={48} />
         </div>
+      </div>
+    );
+  }
+
+  if (needsPassword) {
+    return (
+      <div
+        className="min-h-screen flex flex-col items-center justify-center px-4 text-center gap-3"
+        style={{ background: "var(--color-bg)" }}
+      >
+        <GhostSVG size={48} />
+        <p className="font-semibold" style={{ color: "var(--color-text)" }}>
+          This room is password protected
+        </p>
+        <input
+          type="password"
+          className="input w-full max-w-xs"
+          placeholder="Room password"
+          value={passwordInput}
+          onChange={(e) => setPasswordInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && setPassword(passwordInput)}
+        />
+        {password && (
+          <p className="text-xs" style={{ color: "var(--color-danger)" }}>
+            Wrong password.
+          </p>
+        )}
+        <button
+          className="btn-primary max-w-xs"
+          onClick={() => setPassword(passwordInput)}
+        >
+          Enter room
+        </button>
       </div>
     );
   }
@@ -159,28 +199,28 @@ export default function RoomPageClient() {
               key={msg.id}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`flex ${msg.session_token === SESSION_TOKEN ? "justify-end" : "justify-start"}`}
+              className={`flex ${msg.is_mine ? "justify-end" : "justify-start"}`}
             >
               <div className="max-w-[80%]">
                 <p
                   className="text-xs mb-1"
                   style={{ color: "var(--color-subtle)" }}
                 >
-                  {msg.session_token === SESSION_TOKEN ? "You" : msg.ghost_name}
+                  {msg.is_mine ? "You" : msg.ghost_name}
                 </p>
                 <div
                   className="px-4 py-2.5 rounded-2xl text-sm"
                   style={{
                     background:
-                      msg.session_token === SESSION_TOKEN
+                      msg.is_mine
                         ? "var(--color-primary)"
                         : "var(--color-surface)",
                     color:
-                      msg.session_token === SESSION_TOKEN
+                      msg.is_mine
                         ? "white"
                         : "var(--color-text)",
                     border:
-                      msg.session_token === SESSION_TOKEN
+                      msg.is_mine
                         ? "none"
                         : "1px solid var(--color-border)",
                   }}
@@ -221,7 +261,7 @@ export default function RoomPageClient() {
           <input
             type="text"
             className="input flex-1 py-2.5 text-sm"
-            placeholder={`Message as ${GHOST_ALIAS}`}
+            placeholder="Message as a ghost…"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             onKeyDown={(e) => {

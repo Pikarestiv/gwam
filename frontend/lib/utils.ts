@@ -54,7 +54,20 @@ export function generateGhostAlias(): string {
 }
 
 export function generateSessionToken(): string {
-  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+  return crypto.randomUUID();
+}
+
+// Persisted so a refresh keeps the same ghost identity (and "You" labels) in a room.
+export function getSessionToken(): string {
+  try {
+    const saved = localStorage.getItem("gwam-session-token");
+    if (saved) return saved;
+    const fresh = generateSessionToken();
+    localStorage.setItem("gwam-session-token", fresh);
+    return fresh;
+  } catch {
+    return generateSessionToken();
+  }
 }
 
 export function truncate(str: string, n: number): string {

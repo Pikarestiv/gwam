@@ -13,6 +13,8 @@ class Room extends Model
     'last_activity_at', 'archived_at', 'expires_at',
   ];
 
+  protected $hidden = ['password_hash'];
+
   protected $casts = [
     'is_active' => 'boolean',
     'is_readonly' => 'boolean',

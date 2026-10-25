@@ -35,6 +35,10 @@ export const adminApi = {
 
   // Dashboard
   getStats: () => api.get("/admin/dashboard/stats"),
+  getMessagesChart: () => api.get("/admin/dashboard/messages-chart"),
+  getSignupsChart: () => api.get("/admin/dashboard/signups-chart"),
+  getTopRecipients: () => api.get("/admin/dashboard/top-recipients"),
+  getTopRooms: () => api.get("/admin/dashboard/top-rooms"),
 
   // Users
   getUsers: (page = 1, search = "") =>

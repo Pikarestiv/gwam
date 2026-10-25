@@ -18,7 +18,7 @@ class AdminUserController extends Controller
       $query->where(fn($q) => $q->where('username', 'like', "%{$request->search}%")->orWhere('email', 'like', "%{$request->search}%"));
     }
     if ($request->has('verified')) {
-      $query->whereNotNull($request->verified ? 'email_verified_at' : null);
+      $request->boolean('verified') ? $query->whereNotNull('email_verified_at') : $query->whereNull('email_verified_at');
     }
     $users = $query->orderByDesc('created_at')->paginate(25);
     return response()->json(['success' => true, 'message' => 'Users retrieved.', 'data' => $users]);
@@ -35,7 +35,9 @@ class AdminUserController extends Controller
     $validator = Validator::make($request->all(), ['reason' => 'required|string|max:500']);
     if ($validator->fails())
       return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
-    User::findOrFail($id)->update(['is_suspended' => true, 'suspended_reason' => $request->reason, 'suspended_at' => now()]);
+    $user = User::findOrFail($id);
+    $user->update(['is_suspended' => true, 'suspended_reason' => $request->reason, 'suspended_at' => now()]);
+    $user->tokens()->delete(); // end live sessions; login already refuses suspended users
     return response()->json(['success' => true, 'message' => 'User suspended.', 'data' => []]);
   }
 

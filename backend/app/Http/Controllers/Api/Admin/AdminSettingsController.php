@@ -37,7 +37,7 @@ class AdminSettingsController extends Controller
 
     if ($request->has('maintenance_mode')) {
       if ($request->maintenance_mode) {
-        Artisan::call('down', ['--secret' => 'gwam-admin-bypass']); // Optional secret, but we IP/route excluded anyway
+        Artisan::call('down'); // /api/v1/admin/* is whitelisted in PreventRequestsDuringMaintenance
       }
       else {
         Artisan::call('up');

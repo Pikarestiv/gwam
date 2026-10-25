@@ -19,7 +19,8 @@ class AdminBlockedIpController extends Controller
     $validator = Validator::make($request->all(), ['ip_address' => 'required|ip', 'reason' => 'nullable|string']);
     if ($validator->fails())
       return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
-    BlockedIp::firstOrCreate(['ip_address' => $request->ip_address], ['reason' => $request->reason, 'blocked_by_admin_id' => $request->user()->id]);
+    // updateOrCreate: an admin block must also promote an existing auto-flag row.
+    BlockedIp::updateOrCreate(['ip_address' => $request->ip_address], ['reason' => $request->reason, 'blocked_by_admin_id' => $request->user()->id]);
     return response()->json(['success' => true, 'message' => 'IP blocked.', 'data' => []], 201);
   }
 

@@ -34,10 +34,7 @@ class ArchiveInactiveRooms extends Command
 
     // Hard delete rooms archived for 6+ months
     $deleted = Room::whereNotNull('archived_at')
-      ->where('archived_at', '<=', now()->subMonths(6))
-      ->count();
-
-    Room::whereNotNull('archived_at')
+      ->where('is_active', false)
       ->where('archived_at', '<=', now()->subMonths(6))
       ->delete();
 

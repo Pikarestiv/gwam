@@ -40,15 +40,25 @@ export const sendApi = {
   nudge: (username: string) => api.post(`/users/${username}/nudge`),
   sendMessage: (username: string, data: { content: string }) =>
     api.post(`/users/${username}/messages`, data),
-  saveSenderInterest: (messageId: number, email: string) =>
-    api.post(`/messages/${messageId}/sender-interest`, { email }),
+  saveSenderInterest: (messageId: number, email: string, senderToken: string) =>
+    api.post(`/messages/${messageId}/sender-interest`, {
+      email,
+      sender_token: senderToken,
+    }),
   viewReply: (senderToken: string) => api.get(`/messages/reply/${senderToken}`),
 };
 
 // ─── Rooms ─────────────────────────────────────────────────────────────────
 export const roomsApi = {
   list: () => api.get("/rooms"),
-  get: (code: string) => api.get(`/rooms/${code}`),
+  // Password and session token travel as headers so they stay out of access logs.
+  get: (code: string, password?: string, sessionToken?: string) =>
+    api.get(`/rooms/${code}`, {
+      headers: {
+        ...(password && { "X-Room-Password": password }),
+        ...(sessionToken && { "X-Session-Token": sessionToken }),
+      },
+    }),
   create: (data: {
     name: string;
     topic?: string;
@@ -68,7 +78,11 @@ export const roomsApi = {
   sendMessage: (
     code: string,
     data: { content: string; session_token: string },
-  ) => api.post(`/rooms/${code}/messages`, data),
+    password?: string,
+  ) =>
+    api.post(`/rooms/${code}/messages`, data, {
+      headers: password ? { "X-Room-Password": password } : {},
+    }),
   clearMessages: (id: number) => api.delete(`/rooms/${id}/messages`),
   deleteMessage: (id: number, msgId: number) =>
     api.delete(`/rooms/${id}/messages/${msgId}`),

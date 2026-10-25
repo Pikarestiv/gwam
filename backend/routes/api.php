@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\Admin\AdminAuthController;
 use App\Http\Controllers\Api\Admin\AdminBlockedIpController;
-use App\Http\Controllers\Api\Admin\AdminControllers;
 use App\Http\Controllers\Api\Admin\AdminDashboardController;
 use App\Http\Controllers\Api\Admin\AdminMessageController;
 use App\Http\Controllers\Api\Admin\AdminReportController;
@@ -14,10 +13,14 @@ use App\Http\Controllers\Api\AnonymousMessageController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EmailVerificationController;
 use App\Http\Controllers\Api\MessageController;
-use App\Http\Controllers\Api\MiscControllers;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\RevealInterestController;
 use App\Http\Controllers\Api\PublicUserController;
 use App\Http\Controllers\Api\RoomController;
+use App\Http\Controllers\Api\SettingsController;
+use App\Http\Controllers\Api\StatsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,9 +34,9 @@ Route::prefix('v1')->group(function () {
     // ─── Public Auth ───────────────────────────────────────────────────
     Route::prefix('auth')->group(function () {
             Route::post('register', [AuthController::class , 'register']);
-            Route::post('login', [AuthController::class , 'login']);
-            Route::post('forgot-password', [AuthController::class , 'forgotPassword']);
-            Route::post('reset-password', [AuthController::class , 'resetPassword']);
+            Route::post('login', [AuthController::class , 'login'])->middleware('throttle:10,1');
+            Route::post('forgot-password', [AuthController::class , 'forgotPassword'])->middleware('throttle:5,1');
+            Route::post('reset-password', [AuthController::class , 'resetPassword'])->middleware('throttle:5,1');
         }
         );
 
@@ -49,19 +52,19 @@ Route::prefix('v1')->group(function () {
 
         // ─── Public Rooms ──────────────────────────────────────────────────
         Route::get('rooms/{code}', [RoomController::class , 'show']);
-        Route::middleware(['blocked.ip', 'content.filter'])
+        Route::middleware(['blocked.ip', 'throttle:15,1', 'content.filter'])
             ->post('rooms/{code}/messages', [RoomController::class , 'sendMessage']);
 
         // ─── Public Reports & Stats ────────────────────────────────────────
-        Route::post('reports', [\App\Http\Controllers\Api\MiscControllers::class . '@store']); // ReportController
-        Route::get('stats/public', [\App\Http\Controllers\Api\MiscControllers::class . '@public']); // StatsController
+        Route::post('reports', [ReportController::class , 'store']);
+        Route::get('stats/public', [StatsController::class , 'public']);
     
         // ─── Authenticated ─────────────────────────────────────────────────
         Route::middleware('auth:sanctum')->group(function () {
 
             Route::prefix('auth')->group(function () {
                     Route::post('logout', [AuthController::class , 'logout']);
-                    Route::post('verify-email', [EmailVerificationController::class , 'verify']);
+                    Route::post('verify-email', [EmailVerificationController::class , 'verify'])->middleware('throttle:5,1');
                     Route::post('resend-verification', [EmailVerificationController::class , 'resend']);
                     Route::get('me', [AuthController::class , 'me']);
                 }
@@ -88,19 +91,19 @@ Route::prefix('v1')->group(function () {
                 Route::patch('notifications/read-all', [NotificationController::class , 'markAllRead']);
 
                 // Settings & Profile
-                Route::get('settings', [\App\Http\Controllers\Api\SettingsController::class , 'show']);
-                Route::patch('settings', [\App\Http\Controllers\Api\SettingsController::class , 'update']);
-                Route::get('profile', [\App\Http\Controllers\Api\ProfileController::class , 'show']);
-                Route::patch('profile', [\App\Http\Controllers\Api\ProfileController::class , 'update']);
+                Route::get('settings', [SettingsController::class , 'show']);
+                Route::patch('settings', [SettingsController::class , 'update']);
+                Route::get('profile', [ProfileController::class , 'show']);
+                Route::patch('profile', [ProfileController::class , 'update']);
 
                 // Reveal interests
-                Route::post('reveal-interests', [\App\Http\Controllers\Api\RevealInterestController::class , 'store']);
+                Route::post('reveal-interests', [RevealInterestController::class , 'store']);
             }
             );
 
             // ─── Admin ─────────────────────────────────────────────────────────
             Route::prefix('admin')->group(function () {
-            Route::post('auth/login', [AdminAuthController::class , 'login']);
+            Route::post('auth/login', [AdminAuthController::class , 'login'])->middleware('throttle:10,1');
 
             Route::middleware('auth:admin-sanctum')->group(function () {
                     Route::post('auth/logout', [AdminAuthController::class , 'logout']);

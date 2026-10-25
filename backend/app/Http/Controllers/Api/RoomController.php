@@ -5,146 +5,73 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Room;
 use App\Models\RoomMessage;
-use App\Models\Notification;
+use App\Services\RoomService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class RoomController extends Controller
 {
-  // Public: view room
-  public function show(string $code)
+  public function __construct(private RoomService $rooms)
   {
-    $room = Room::where('code', $code)->where('is_active', true)->first();
+  }
 
-    if (!$room || $room->isExpired()) {
-      return response()->json([
-        'success' => false,
-        'message' => 'Room not found or is closed.',
-      ], 404);
+  // Public: view room
+  public function show(Request $request, string $code)
+  {
+    $room = $this->rooms->findOpen($code);
+    if (!$room) {
+      return $this->fail('Room not found or is closed.', 404);
     }
 
-    $messages = RoomMessage::where('room_id', $room->id)
-      ->where('is_deleted', false)
-      ->where('is_flagged', false)
-      ->orderBy('created_at')
-      ->get(['id', 'content', 'ghost_name', 'created_at']);
+    if (!$this->rooms->passwordMatches($room, $this->password($request))) {
+      return $this->wrongPassword($room);
+    }
 
-    return response()->json([
-      'success' => true,
-      'message' => 'Room retrieved.',
-      'data' => [
-        'room' => [
-          'id' => $room->id,
-          'name' => $room->name,
-          'topic' => $room->topic,
-          'code' => $room->code,
-          'is_readonly' => $room->is_readonly,
-          'has_password' => !is_null($room->password_hash),
-          'owner_username' => $room->owner->username,
-          'expires_at' => $room->expires_at,
-        ],
-        'messages' => $messages,
+    return $this->ok('Room retrieved.', [
+      'room' => [
+        'id' => $room->id,
+        'name' => $room->name,
+        'topic' => $room->topic,
+        'code' => $room->code,
+        'is_readonly' => $room->is_readonly,
+        'has_password' => !is_null($room->password_hash),
+        'owner_username' => $room->owner->username,
+        'expires_at' => $room->expires_at,
       ],
+      'messages' => $this->rooms->visibleMessages($room, $request->header('X-Session-Token')),
     ]);
   }
 
   // Public: send room message
   public function sendMessage(Request $request, string $code)
   {
-    $room = Room::where('code', $code)->where('is_active', true)->first();
-
+    $room = $this->rooms->findOpen($code);
     if (!$room) {
-      return response()->json([
-        'success' => false,
-        'message' => 'Room not found or is closed.',
-      ], 404);
-    }
-
-    if ($room->isExpired()) {
-      return response()->json([
-        'success' => false,
-        'message' => 'This room has expired.',
-      ], 404);
+      return $this->fail('Room not found or is closed.', 404);
     }
 
     if ($room->is_readonly) {
-      return response()->json([
-        'success' => false,
-        'message' => 'This room is in read-only mode.',
-      ], 403);
+      return $this->fail('This room is in read-only mode.', 403);
     }
 
-    if ($room->password_hash && !Hash::check($request->password ?? '', $room->password_hash)) {
-      return response()->json([
-        'success' => false,
-        'message' => 'Incorrect room password.',
-        'errors' => ['password' => ['Wrong password.']],
-      ], 403);
+    if (!$this->rooms->passwordMatches($room, $this->password($request))) {
+      return $this->wrongPassword($room);
     }
 
-    $validator = Validator::make($request->all(), [
+    $data = $this->check($request->all(), [
       'content' => 'required|string|min:1|max:500',
-      'session_token' => 'required|string',
+      'session_token' => 'required|string|max:100',
     ]);
-
-    if ($validator->fails()) {
-      return response()->json([
-        'success' => false,
-        'message' => 'Validation failed.',
-        'errors' => $validator->errors(),
-      ], 422);
+    if ($data instanceof \Illuminate\Http\JsonResponse) {
+      return $data;
     }
 
-    $ghostNames = [
-      'Ghost Pepper 🌶', 'Ghost Mode 🕶', 'Ghost Writer ✍️',
-      'Ghost Rider 🏍️', 'Ghost Whisperer 👻', 'Ghost Town 🏚️',
-      'Ghost Protocol 🔐', 'Ghost Ship 🚢', 'Ghost Light 💡',
-      'Ghost Signal 📡', 'Ghost Runner 🏃', 'Ghost Hacker 💻',
-      'Ghost Note 🎵', 'Ghost King 👑', 'Ghost Queen 💅',
-      'Ghost Detective 🔍', 'Ghost Chef 🍳', 'Ghost Artist 🎨',
-      'Ghost Gamer 🎮', 'Ghost Pilot ✈️', 'Ghost Sailor ⚓',
-      'Ghost Wizard 🧙', 'Ghost Ninja 🥷', 'Ghost Astronaut 🚀',
-      'Ghost Poet 📜', 'Ghost DJ 🎧', 'Ghost Farmer 🌾',
-      'Ghost Doctor 🩺', 'Ghost Teacher 📚', 'Ghost Explorer 🧭',
-    ];
+    $msg = $this->rooms->postMessage($room, $data['content'], $data['session_token'], $request->boolean('is_flagged'));
 
-    // Consistent ghost name per session token
-    $ghostIndex = crc32($request->session_token) % count($ghostNames);
-    $ghostName = $ghostNames[abs($ghostIndex)];
-
-    $msg = RoomMessage::create([
-      'room_id' => $room->id,
-      'content' => $request->content,
-      'ghost_name' => $ghostName,
-      'session_token' => $request->session_token,
-      'is_flagged' => $request->boolean('is_flagged', false),
-    ]);
-
-    $room->update(['last_activity_at' => now()]);
-
-    // Notify room owner
-    Notification::create([
-      'user_id' => $room->owner_id,
-      'type' => 'room_activity',
-      'data' => [
-        'room_id' => $room->id,
-        'room_name' => $room->name,
-        'room_code' => $room->code,
-        'preview' => Str::limit($msg->content, 60),
-      ],
-    ]);
-
-    return response()->json([
-      'success' => true,
-      'message' => 'Message sent.',
-      'data' => [
-        'id' => $msg->id,
-        'ghost_name' => $msg->ghost_name,
-        'content' => $msg->content,
-        'created_at' => $msg->created_at,
-      ],
+    return $this->ok('Message sent.', [
+      'id' => $msg->id,
+      'ghost_name' => $msg->ghost_name,
+      'content' => $msg->content,
+      'created_at' => $msg->created_at,
     ], 201);
   }
 
@@ -157,107 +84,92 @@ class RoomController extends Controller
       ->orderByDesc('last_activity_at')
       ->get();
 
-    return response()->json([
-      'success' => true,
-      'message' => 'Rooms retrieved.',
-      'data' => $rooms,
-    ]);
+    return $this->ok('Rooms retrieved.', $rooms);
   }
 
   // Authenticated + verified: create room
   public function store(Request $request)
   {
-    $validator = Validator::make($request->all(), [
+    $data = $this->check($request->all(), [
       'name' => 'required|string|max:100',
       'topic' => 'nullable|string|max:255',
       'password' => 'nullable|string|min:4',
       'duration_hours' => 'nullable|integer|in:' . implode(',', array_keys(Room::DURATION_OPTIONS)),
     ]);
-
-    if ($validator->fails()) {
-      return response()->json([
-        'success' => false,
-        'message' => 'Validation failed.',
-        'errors' => $validator->errors(),
-      ], 422);
+    if ($data instanceof \Illuminate\Http\JsonResponse) {
+      return $data;
     }
 
-    $durationHours = (int) ($request->duration_hours ?? 24);
-
-    // Paid tiers aren't available yet — reject anything above the free 24h option.
-    if (Room::DURATION_OPTIONS[$durationHours] !== 'free') {
-      return response()->json([
-        'success' => false,
-        'message' => 'Longer room durations require a paid plan (coming soon). Use 24 hours for now.',
-        'errors' => ['duration_hours' => ['This duration requires a paid plan.']],
-      ], 422);
+    $room = $this->rooms->create($request->user(), $data);
+    if (!$room) {
+      return $this->fail(
+        'Longer room durations require a paid plan (coming soon). Use 24 hours for now.',
+        422,
+        ['errors' => ['duration_hours' => ['This duration requires a paid plan.']]],
+      );
     }
 
-    $room = Room::create([
-      'owner_id' => $request->user()->id,
-      'name' => $request->name,
-      'topic' => $request->topic,
-      'password_hash' => $request->password ?Hash::make($request->password) : null,
-      'expires_at' => now()->addHours($durationHours),
-    ]);
-
-    return response()->json([
-      'success' => true,
-      'message' => 'Room created.',
-      'data' => $room,
-    ], 201);
+    return $this->ok('Room created.', $room, 201);
   }
 
   // Authenticated: update room
   public function update(Request $request, int $id)
   {
-    $room = Room::where('id', $id)->where('owner_id', $request->user()->id)->firstOrFail();
+    $room = $this->owned($request, $id);
 
-    $room->update($request->only(['name', 'topic', 'is_active', 'is_readonly']));
-
-    return response()->json([
-      'success' => true,
-      'message' => 'Room updated.',
-      'data' => $room,
+    $data = $this->check($request->all(), [
+      'name' => 'sometimes|string|max:100',
+      'topic' => 'sometimes|nullable|string|max:255',
+      'is_active' => 'sometimes|boolean',
+      'is_readonly' => 'sometimes|boolean',
     ]);
+    if ($data instanceof \Illuminate\Http\JsonResponse) {
+      return $data;
+    }
+
+    return $this->ok('Room updated.', $this->rooms->update($room, $data));
   }
 
   // Authenticated: delete room
   public function destroy(Request $request, int $id)
   {
-    $room = Room::where('id', $id)->where('owner_id', $request->user()->id)->firstOrFail();
-    $room->update(['archived_at' => now(), 'is_active' => false]);
+    $this->rooms->archive($this->owned($request, $id));
 
-    return response()->json([
-      'success' => true,
-      'message' => 'Room archived.',
-      'data' => [],
-    ]);
+    return $this->ok('Room archived.');
   }
 
   // Authenticated: clear all room messages
   public function clearMessages(Request $request, int $id)
   {
-    $room = Room::where('id', $id)->where('owner_id', $request->user()->id)->firstOrFail();
-    RoomMessage::where('room_id', $room->id)->update(['is_deleted' => true]);
+    RoomMessage::where('room_id', $this->owned($request, $id)->id)->update(['is_deleted' => true]);
 
-    return response()->json([
-      'success' => true,
-      'message' => 'All messages cleared.',
-      'data' => [],
-    ]);
+    return $this->ok('All messages cleared.');
   }
 
   // Authenticated: delete specific room message
   public function destroyMessage(Request $request, int $id, int $msgId)
   {
-    $room = Room::where('id', $id)->where('owner_id', $request->user()->id)->firstOrFail();
-    RoomMessage::where('id', $msgId)->where('room_id', $room->id)->update(['is_deleted' => true]);
+    RoomMessage::where('id', $msgId)->where('room_id', $this->owned($request, $id)->id)->update(['is_deleted' => true]);
 
-    return response()->json([
-      'success' => true,
-      'message' => 'Message deleted.',
-      'data' => [],
+    return $this->ok('Message deleted.');
+  }
+
+  private function owned(Request $request, int $id): Room
+  {
+    return Room::where('id', $id)->where('owner_id', $request->user()->id)->firstOrFail();
+  }
+
+  // Header, not query string, so the password stays out of access logs.
+  private function password(Request $request): ?string
+  {
+    return $request->header('X-Room-Password') ?? $request->input('password');
+  }
+
+  private function wrongPassword(Room $room)
+  {
+    return $this->fail('Incorrect room password.', 403, [
+      'errors' => ['password' => ['Wrong password.']],
+      'data' => ['requires_password' => true, 'name' => $room->name],
     ]);
   }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\BlockedIp;
+use App\Services\BlockedIpService;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -27,13 +27,18 @@ class ContentFilter
     'your address is', 'i know your house', 'i have your number',
   ];
 
+  public function __construct(private BlockedIpService $blockedIps)
+  {
+  }
+
   public function handle(Request $request, Closure $next)
   {
-    $content = strtolower($request->input('content', ''));
+    $content = (string) $request->input('content', '');
 
     foreach ($this->blocklist as $term) {
-      if (str_contains($content, $term)) {
-        $this->trackFlaggedIp($request->ip());
+      // Whole-word match: "ode" must not hit "code", "kys" must not hit "turkeys".
+      if (preg_match('/(?<![\p{L}\p{N}])' . preg_quote($term, '/') . '(?![\p{L}\p{N}])/iu', $content)) {
+        $this->blockedIps->recordFlag($request->ip());
         // Save as flagged — don't tell sender
         $request->merge(['is_flagged' => true]);
         break;
@@ -41,20 +46,5 @@ class ContentFilter
     }
 
     return $next($request);
-  }
-
-  protected function trackFlaggedIp(string $ip): void
-  {
-    $blocked = BlockedIp::firstOrNew(['ip_address' => $ip]);
-    $blocked->flag_count = ($blocked->flag_count ?? 0) + 1;
-    $blocked->reason = $blocked->reason ?? 'Auto-flagged: content violations';
-
-    // Auto-block after 3 flagged messages in 24 hours
-    // (simplified: we track total count here; production would use time-windowed cache)
-    if ($blocked->flag_count >= 3) {
-      $blocked->reason = 'Auto-blocked: 3+ content violations';
-    }
-
-    $blocked->save();
   }
 }

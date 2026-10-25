@@ -37,6 +37,12 @@ export default function DashboardPage() {
     queryFn: () => adminApi.getStats().then((r) => r.data.data),
   });
 
+  // The stats endpoint never returned a chart series; it has its own endpoint.
+  const { data: messagesChart = [] } = useQuery({
+    queryKey: ["admin-messages-chart"],
+    queryFn: () => adminApi.getMessagesChart().then((r) => r.data.data),
+  });
+
   if (isLoading)
     return (
       <div className="p-8 text-center text-slate-400">Loading stats...</div>
@@ -83,7 +89,7 @@ export default function DashboardPage() {
           (Last 30 Days)
         </h3>
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={stats.messages_chart}>
+          <AreaChart data={messagesChart}>
             <defs>
               <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
