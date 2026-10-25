@@ -12,6 +12,7 @@ import {
   YAxis,
 } from "recharts";
 import { adminApi } from "@/lib/api";
+import { TrafficSection } from "@/components/analytics/TrafficSection";
 
 function TrendChart({
   title,
@@ -87,6 +88,8 @@ export default function AnalyticsPage() {
         <BarChart3 className="text-blue-500" />
         Analytics
       </h1>
+
+      <TrafficSection />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <TrendChart title="Messages" color="#3b82f6" queryFn={adminApi.getMessagesChart} />

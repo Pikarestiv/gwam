@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { usePwaStore } from "@/lib/stores/senderSessionStore";
 import { GhostSVG } from "./GhostSVG";
 import { X } from "lucide-react";
+import { track } from "@/lib/track";
 
 export function PWAInstallBanner() {
   const {
@@ -39,6 +40,8 @@ export function PWAInstallBanner() {
   const install = async () => {
     if (!deferredPrompt) return;
     (deferredPrompt as any).prompt();
+    const { outcome } = await (deferredPrompt as any).userChoice;
+    if (outcome === "accepted") track("pwa_installed");
     setDeferredPrompt(null);
     setVisible(false);
   };

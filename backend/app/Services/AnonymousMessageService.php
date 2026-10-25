@@ -15,6 +15,10 @@ use Illuminate\Support\Str;
 
 class AnonymousMessageService
 {
+  public function __construct(private PushService $push)
+  {
+  }
+
   public function deliver(User $recipient, string $content, bool $flagged, string $ip, string $userAgent): Message
   {
     $geo = $this->geolocate($ip);
@@ -40,6 +44,8 @@ class AnonymousMessageService
         'data' => ['message_id' => $message->id, 'preview' => Str::limit($content, 60)],
       ]);
       $this->emailRecipient($recipient);
+      // Generic text only: the message itself never leaves the inbox.
+      $this->push->notify($recipient, 'New anonymous message 👻', 'Someone sent you a Gwam.', '/inbox');
     }
 
     return $message;

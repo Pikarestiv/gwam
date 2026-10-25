@@ -13,7 +13,7 @@ class User extends Authenticatable
 
     protected $fillable = [
         'name', 'username', 'email', 'password',
-        'avatar_seed', 'bio', 'email_verified_at',
+        'avatar_seed', 'bio', 'prompt', 'email_verified_at',
         'inbox_active', 'theme_preference',
         'message_retention_months', 'is_suspended',
         'suspended_reason', 'suspended_at', 'last_login_at',
@@ -33,6 +33,11 @@ class User extends Authenticatable
     ];
 
     // Relationships
+    public function pushSubscriptions()
+    {
+        return $this->hasMany(PushSubscription::class);
+    }
+
     public function messages()
     {
         return $this->hasMany(Message::class , 'recipient_id');

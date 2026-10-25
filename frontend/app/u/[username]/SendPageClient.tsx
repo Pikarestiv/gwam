@@ -6,6 +6,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send } from "lucide-react";
 import { sendApi } from "@/lib/services";
+import { track } from "@/lib/track";
 import { useSenderSessionStore } from "@/lib/stores/senderSessionStore";
 import { BannerAd, InterstitialAd } from "@/components/ui/AdComponents";
 import { CookieConsentBanner } from "@/components/ui/CookieConsentBanner";
@@ -60,6 +61,7 @@ export default function SendPageClient() {
       setMessageId(message_id);
       if (sender_token) setSenderToken(sender_token);
       incrementSendCount();
+      track("message_sent");
       setDelivered(true);
       if ((sendCount + 1) % 3 === 0) {
         setShowInterstitial(true);
@@ -141,7 +143,8 @@ export default function SendPageClient() {
               Send @{username} a Gwam 👻
             </h1>
             <p className="text-sm mt-1" style={{ color: "var(--color-muted)" }}>
-              Say anything. Stay anonymous. No names, no judgment.
+              {profile.prompt ||
+                "Say anything. Stay anonymous. No names, no judgment."}
             </p>
           </div>
           <div className="card">

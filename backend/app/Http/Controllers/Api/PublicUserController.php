@@ -30,6 +30,7 @@ class PublicUserController extends Controller
         'username' => $user->username,
         'avatar_seed' => $user->avatar_seed,
         'bio' => $user->bio,
+        'prompt' => $user->prompt,
         'inbox_active' => $user->inbox_active,
       ],
     ]);

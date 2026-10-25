@@ -7,6 +7,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { authApi } from "@/lib/services";
 import { GhostSVG } from "@/components/ui/GhostSVG";
+import { track } from "@/lib/track";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function RegisterPage() {
     setGlobalError("");
     try {
       const res = await authApi.register(form);
+      track("signup");
       const { user, token } = res.data.data;
       setAuth(user, token);
       router.push("/verify-email");

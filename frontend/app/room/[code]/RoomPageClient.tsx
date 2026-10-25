@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Copy } from "lucide-react";
 import { roomsApi } from "@/lib/services";
+import { track } from "@/lib/track";
 import {
   getSessionToken,
   formatRelativeTime,
@@ -65,6 +66,7 @@ export default function RoomPageClient() {
       ),
     onSuccess: () => {
       setContent("");
+      track("room_message_sent");
       qc.invalidateQueries({ queryKey: ["room", code, password] });
     },
   });

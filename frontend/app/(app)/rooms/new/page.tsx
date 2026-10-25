@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { AppShell } from "@/components/layout/AppShell";
-import { roomsApi } from "@/lib/services";
+import { useQuery } from "@tanstack/react-query";
+import { roomsApi, paymentsApi } from "@/lib/services";
 import { ArrowLeft, Lock as LockIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -25,17 +26,29 @@ export default function NewRoomPage() {
   });
   const [error, setError] = useState("");
 
+  const { data: pricing } = useQuery({
+    queryKey: ["pricing"],
+    queryFn: () => paymentsApi.pricing().then((r) => r.data.data),
+  });
+  const priceOf = (hours: number): number | undefined =>
+    pricing?.room_kobo?.[hours];
+
   const createMutation = useMutation({
-    mutationFn: () =>
-      roomsApi.create({
+    mutationFn: async () => {
+      const body = {
         name: form.name,
         topic: form.topic || undefined,
         password: form.password || undefined,
         duration_hours: form.duration_hours,
-      }),
-    onSuccess: (res) => {
-      const code = res.data.data.code;
-      router.push(`/room/${code}`);
+      };
+      if (form.duration_hours === 24) {
+        const res = await roomsApi.create(body);
+        router.push(`/room/${res.data.data.code}`);
+        return;
+      }
+      // Paid durations: Paystack checkout, then /rooms finishes the purchase.
+      const res = await paymentsApi.startRoom(body);
+      window.location.href = res.data.data.url;
     },
     onError: (err: any) =>
       setError(err.response?.data?.message || "Failed to create room."),
@@ -139,7 +152,8 @@ export default function NewRoomPage() {
             <div className="grid grid-cols-2 gap-2">
               {DURATION_OPTIONS.map((opt) => {
                 const selected = form.duration_hours === opt.hours;
-                const locked = opt.tier === "pro";
+                const price = priceOf(opt.hours);
+                const locked = opt.tier === "pro" && price === undefined;
                 return (
                   <button
                     key={opt.hours}
@@ -162,6 +176,7 @@ export default function NewRoomPage() {
                     }}
                   >
                     {opt.label}
+                    {price !== undefined && ` · ₦${price / 100}`}
                     {locked && <LockIcon size={11} />}
                   </button>
                 );
@@ -171,8 +186,8 @@ export default function NewRoomPage() {
               className="text-xs mt-1.5"
               style={{ color: "var(--color-subtle)" }}
             >
-              Rooms auto-close after this period. Longer durations are coming
-              soon with Gwam Pro.
+              Rooms auto-close after this period. Longer durations are paid and
+              checked out securely with Paystack.
             </p>
           </div>
           <button
@@ -180,7 +195,11 @@ export default function NewRoomPage() {
             disabled={createMutation.isPending}
             className="btn-primary mt-2"
           >
-            {createMutation.isPending ? "Creating…" : "Create Room 👻"}
+            {createMutation.isPending
+              ? "Working…"
+              : form.duration_hours === 24
+                ? "Create Room 👻"
+                : "Pay & create room 👻"}
           </button>
         </form>
       </div>

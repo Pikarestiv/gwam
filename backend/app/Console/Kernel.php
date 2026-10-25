@@ -15,6 +15,7 @@ class Kernel extends ConsoleKernel
         // Run daily at midnight
         $schedule->command('gwam:delete-expired-messages')->daily();
         $schedule->command('gwam:archive-inactive-rooms')->daily();
+        $schedule->call(fn() => app(\App\Services\AnalyticsService::class)->prune())->daily();
         // Run weekly on Mondays at 9am
         $schedule->command('gwam:weekly-digest')->weeklyOn(1, '09:00');
     }

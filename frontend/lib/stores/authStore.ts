@@ -8,6 +8,7 @@ export interface User {
   email: string;
   avatar_seed: string;
   bio: string | null;
+  prompt: string | null;
   email_verified_at?: string | null;
   inbox_active: boolean;
   is_verified?: boolean;

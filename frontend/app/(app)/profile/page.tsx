@@ -13,6 +13,7 @@ export default function ProfilePage() {
   const [form, setForm] = useState({
     name: user?.name || "",
     bio: user?.bio || "",
+    prompt: user?.prompt || "",
   });
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -134,6 +135,21 @@ export default function ProfilePage() {
               placeholder="Tell people a little about yourself…"
               value={form.bio}
               onChange={(e) => setForm({ ...form, bio: e.target.value })}
+            />
+          </div>
+          <div>
+            <label
+              className="block text-sm font-medium mb-1.5"
+              style={{ color: "var(--color-muted)" }}
+            >
+              Inbox prompt
+            </label>
+            <input
+              className="input"
+              maxLength={120}
+              placeholder="e.g. Ask me anything, rate my outfit…"
+              value={form.prompt}
+              onChange={(e) => setForm({ ...form, prompt: e.target.value })}
             />
           </div>
           <button

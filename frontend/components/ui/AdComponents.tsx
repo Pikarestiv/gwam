@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { useSenderSessionStore } from "@/lib/stores/senderSessionStore";
 
@@ -117,13 +117,32 @@ export function InterstitialAd({ onClose }: InterstitialAdProps) {
 }
 
 export function BannerAd({
-  slot = "BANNER_SLOT",
+  slot = process.env.NEXT_PUBLIC_ADSENSE_BANNER_SLOT || "BANNER_SLOT",
   className = "",
 }: {
   slot?: string;
   className?: string;
 }) {
   const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+  const adRef = useRef<HTMLModElement>(null);
+
+  useEffect(() => {
+    if (!adsenseClient || !adRef.current) return;
+    try {
+      if (localStorage.getItem("gwam-cookie-consent") === "declined") return;
+      // The AdSense script is loaded once, on first banner mount.
+      if (!document.getElementById("adsense-js")) {
+        const s = document.createElement("script");
+        s.id = "adsense-js";
+        s.async = true;
+        s.crossOrigin = "anonymous";
+        s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`;
+        document.head.appendChild(s);
+      }
+      ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+    } catch {}
+  }, [adsenseClient]);
+
   if (!adsenseClient) return null;
 
   return (
@@ -132,6 +151,7 @@ export function BannerAd({
       style={{ minHeight: "90px", background: "var(--color-surface)" }}
     >
       <ins
+        ref={adRef}
         className="adsbygoogle"
         style={{ display: "block" }}
         data-ad-client={adsenseClient}

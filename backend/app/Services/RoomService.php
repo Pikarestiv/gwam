@@ -83,7 +83,7 @@ class RoomService
     return $msg;
   }
 
-  /** Returns null when the requested duration needs a paid plan (none exist yet). */
+  /** Returns null when the requested duration is paid; those go through PaymentService. */
   public function create(User $owner, array $data): ?Room
   {
     $hours = (int) ($data['duration_hours'] ?? 24);
@@ -92,13 +92,24 @@ class RoomService
       return null;
     }
 
+    return $this->build($owner->id, $data['name'], $data['topic'] ?? null, $this->hashed($data['password'] ?? null), $hours);
+  }
+
+  /** Called by PaymentService once a payment is confirmed. */
+  public function build(int $ownerId, string $name, ?string $topic, ?string $passwordHash, int $hours): Room
+  {
     return Room::create([
-      'owner_id' => $owner->id,
-      'name' => $data['name'],
-      'topic' => $data['topic'] ?? null,
-      'password_hash' => !empty($data['password']) ? Hash::make($data['password']) : null,
+      'owner_id' => $ownerId,
+      'name' => $name,
+      'topic' => $topic,
+      'password_hash' => $passwordHash,
       'expires_at' => now()->addHours($hours),
     ]);
+  }
+
+  public function hashed(?string $password): ?string
+  {
+    return $password ? Hash::make($password) : null;
   }
 
   /** Archived rooms stay archived: reopening one would let the archive command delete a live room. */

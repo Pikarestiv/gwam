@@ -8,6 +8,7 @@ import { useThemeStore } from "@/lib/stores/themeStore";
 import { settingsApi, authApi } from "@/lib/services";
 import { Settings, Moon, Clock, Trash2, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { PushToggle } from "@/components/settings/PushToggle";
 
 const themes = [
   {
@@ -141,6 +142,10 @@ export default function SettingsPage() {
               </button>
             ))}
           </div>
+        </section>
+
+        <section className="mb-6">
+          <PushToggle />
         </section>
 
         {/* Message retention */}

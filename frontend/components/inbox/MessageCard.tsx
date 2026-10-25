@@ -4,7 +4,9 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { messagesApi } from "@/lib/services";
 import { formatRelativeTime } from "@/lib/utils";
-import { Trash2, Reply, Eye, Flag } from "lucide-react";
+import { Trash2, Reply, Eye, Flag, Share2 } from "lucide-react";
+import { shareMessageCard } from "@/lib/shareCard";
+import { useAuthStore } from "@/lib/stores/authStore";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface Message {
@@ -25,6 +27,7 @@ export function MessageCard({
   onDelete: (id: number) => void;
 }) {
   const qc = useQueryClient();
+  const username = useAuthStore((s) => s.user?.username ?? "");
   const [showReply, setShowReply] = useState(false);
   const [replyText, setReplyText] = useState(msg.reply_text || "");
   const [showReveal, setShowReveal] = useState(false);
@@ -106,6 +109,14 @@ export function MessageCard({
           {formatRelativeTime(msg.created_at)}
         </span>
         <div className="flex items-center gap-1">
+          <button
+            onClick={() => shareMessageCard(msg.content, username)}
+            title="Share as image"
+            className="p-1.5 rounded-lg transition-colors"
+            style={{ color: "var(--color-muted)" }}
+          >
+            <Share2 size={15} />
+          </button>
           <button
             onClick={() => setShowReply(!showReply)}
             title="Reply"

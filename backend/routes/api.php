@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\AdminAnalyticsController;
 use App\Http\Controllers\Api\Admin\AdminAuthController;
 use App\Http\Controllers\Api\Admin\AdminBlockedIpController;
 use App\Http\Controllers\Api\Admin\AdminDashboardController;
@@ -12,12 +13,15 @@ use App\Http\Controllers\Api\Admin\AdminUserController;
 use App\Http\Controllers\Api\AnonymousMessageController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EmailVerificationController;
+use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\RevealInterestController;
 use App\Http\Controllers\Api\PublicUserController;
+use App\Http\Controllers\Api\PushController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\SettingsController;
 use App\Http\Controllers\Api\StatsController;
@@ -57,6 +61,10 @@ Route::prefix('v1')->group(function () {
 
         // ─── Public Reports & Stats ────────────────────────────────────────
         Route::post('reports', [ReportController::class , 'store']);
+        Route::get('payments/pricing', [PaymentController::class , 'pricing']);
+        Route::post('webhooks/paystack', [PaymentController::class , 'webhook']);
+        Route::get('push/key', [PushController::class , 'key']);
+        Route::post('events', [EventController::class , 'store'])->middleware('throttle:120,1');
         Route::get('stats/public', [StatsController::class , 'public']);
     
         // ─── Authenticated ─────────────────────────────────────────────────
@@ -69,6 +77,14 @@ Route::prefix('v1')->group(function () {
                     Route::get('me', [AuthController::class , 'me']);
                 }
                 );
+
+                // Payments
+                Route::post('payments/rooms', [PaymentController::class , 'startRoom'])->middleware(['verified.only', 'throttle:10,1']);
+                Route::get('payments/{reference}', [PaymentController::class , 'verify']);
+
+                // Web push
+                Route::post('push/subscribe', [PushController::class , 'subscribe']);
+                Route::delete('push/subscribe', [PushController::class , 'unsubscribe']);
 
                 // Messages (inbox)
                 Route::get('messages', [MessageController::class , 'index']);
@@ -114,6 +130,8 @@ Route::prefix('v1')->group(function () {
                     Route::get('dashboard/signups-chart', [AdminDashboardController::class , 'signupsChart']);
                     Route::get('dashboard/top-recipients', [AdminDashboardController::class , 'topRecipients']);
                     Route::get('dashboard/top-rooms', [AdminDashboardController::class , 'topRooms']);
+
+                    Route::get('analytics', [AdminAnalyticsController::class , 'summary']);
 
                     Route::get('users', [AdminUserController::class , 'index']);
                     Route::get('users/{id}', [AdminUserController::class , 'show']);

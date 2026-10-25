@@ -118,6 +118,7 @@ class AuthService
       'email' => $user->email,
       'avatar_seed' => $user->avatar_seed,
       'bio' => $user->bio,
+      'prompt' => $user->prompt,
       'inbox_active' => $user->inbox_active,
       'is_verified' => $user->isVerified(),
       'theme_preference' => $user->theme_preference,

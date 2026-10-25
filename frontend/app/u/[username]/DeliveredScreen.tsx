@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useSenderSessionStore } from "@/lib/stores/senderSessionStore";
+import { BannerAd } from "@/components/ui/AdComponents";
 import { GhostSVG } from "@/components/ui/GhostSVG";
 
 export function DeliveredScreen({
@@ -45,6 +46,7 @@ export function DeliveredScreen({
       <button onClick={onReset} className="btn-primary mt-8 max-w-xs">
         Send another 👻
       </button>
+      <BannerAd className="mt-8 max-w-sm" />
     </motion.div>
   );
 }

@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
+import { BannerAd } from "@/components/ui/AdComponents";
+import { track } from "@/lib/track";
 import { useAuthStore } from "@/lib/stores/authStore";
 import {
   Share2,
@@ -28,6 +30,7 @@ export default function SharePage() {
 
   const copyLink = () => {
     navigator.clipboard.writeText(link);
+    track("link_copied");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -134,6 +137,7 @@ export default function SharePage() {
               {copied ? "✓ Copied!" : "Copy link for bio"}
             </button>
           </div>
+          <BannerAd />
         </div>
       </div>
     </AppShell>

@@ -84,8 +84,16 @@ Each has its own `package.json`/`composer.json` and its own GitHub Actions workf
 - New dynamic frontend route: remember the `.htaccess` rewrite rule (see infra fact #5 above) or it will break outside of client-side navigation.
 - Check `.env.example` in each of `backend/`, `frontend/`, `admin-app/` before assuming what config exists — several env vars (`ADMIN_URL`, `SANCTUM_STATEFUL_DOMAINS`) were updated 2026-08 when admin moved off its own subdomain; the real server `.env` needs the same manual update (see infra fact #6).
 
+## Features added 2026-10 (see code for details)
+
+- **First-party analytics:** `events` table, `POST /events` (allow-listed names, no IP/cookies), admin summary at `/admin/analytics`; frontend `lib/track.ts` + `PageViewTracker`. Pruned after 90 days by the scheduler.
+- **Paid room durations (Paystack):** `PaymentService` — checkout via `POST /payments/rooms`, room created only after Paystack verify (amount-checked, idempotent) from either the browser callback (`/rooms/?reference=`) or the webhook (`POST /webhooks/paystack`, HMAC-SHA512). Prices come from `config/gwam.php` / env and are **placeholders**. Needs `PAYSTACK_SECRET_KEY` in the server `.env`.
+- **Web push:** `minishlink/web-push` (pinned `^9`, composer platform php 8.1.0 — don't bump it). Needs `VAPID_*` keys (`php artisan gwam:vapid-keys`) in the server `.env`. Service-worker handlers live in `frontend/worker/index.js` (merged by next-pwa).
+- **IP blocks:** flags count in a 24h cache window; 3 flags = 7-day auto-block (`blocked_ips.expires_at`); admin blocks never expire.
+- Tests: `backend/tests/Feature/GwamApiTest.php` needs a MySQL DB (`RefreshDatabase` **wipes it** — point `DB_DATABASE` at a scratch DB, never a real one).
+
 ## Known open items (as of 2026-08-12)
 
 - Old `admin.gwam.dumostech.com` subdomain (FTP dir + DNS record) still needs manual cleanup now that admin lives at `/admin`.
 - Cron job PHP version for the Laravel scheduler is unverified (infra fact #3) — worth checking if scheduled commands (room archival, message pruning, weekly digest) aren't actually firing.
-- No real payment/subscription system — `Room::DURATION_OPTIONS` and the frontend's locked duration buttons are the only "Pro tier" scaffolding that exists; don't wire real billing without the user asking for it explicitly.
+- Payments exist only for paid room durations (one-off, Paystack). No subscriptions/"Pro" tier; no admin view of payments yet.

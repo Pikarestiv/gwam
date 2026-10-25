@@ -36,7 +36,7 @@ export default function PrivacyPage() {
             ],
             [
               "Cookies",
-              "Gwam sets no analytics or third-party tracking cookies. AdSense may set cookies for ad personalization — you can opt out via Google Ad Settings.",
+              "Gwam counts page views and key actions (like sending a message) with an anonymous random per-tab ID, stored on our own servers for 90 days — no cookies, no IP address, no account link. You can opt out by declining the cookie banner. AdSense may set cookies for ad personalization — you can opt out via Google Ad Settings.",
             ],
             [
               "Data Retention",

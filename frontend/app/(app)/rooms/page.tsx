@@ -7,6 +7,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Plus, Users, Share2, Lock, MessageSquare } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
+import { BannerAd } from "@/components/ui/AdComponents";
+import { PaymentReturn } from "@/components/rooms/PaymentReturn";
 import { VerificationBanner } from "@/components/ui/VerificationBanner";
 import { roomsApi } from "@/lib/services";
 import { formatRelativeTime, formatExpiryCountdown } from "@/lib/utils";
@@ -25,6 +27,7 @@ export default function RoomsPage() {
     <AppShell title="Rooms">
       <VerificationBanner />
       <div className="page">
+        <PaymentReturn />
         <div className="flex items-center justify-between mb-6">
           <h1
             className="text-xl font-bold flex items-center gap-2"
@@ -137,6 +140,7 @@ export default function RoomsPage() {
             ))}
           </div>
         )}
+        <BannerAd className="mt-6" />
       </div>
     </AppShell>
   );

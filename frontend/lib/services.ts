@@ -88,6 +88,27 @@ export const roomsApi = {
     api.delete(`/rooms/${id}/messages/${msgId}`),
 };
 
+// ─── Push ──────────────────────────────────────────────────────────────────
+export const pushApi = {
+  key: () => api.get("/push/key"),
+  subscribe: (subscription: PushSubscriptionJSON) =>
+    api.post("/push/subscribe", subscription),
+  unsubscribe: (endpoint: string) =>
+    api.delete("/push/subscribe", { data: { endpoint } }),
+};
+
+// ─── Payments ──────────────────────────────────────────────────────────────
+export const paymentsApi = {
+  pricing: () => api.get("/payments/pricing"),
+  startRoom: (data: {
+    name: string;
+    topic?: string;
+    password?: string;
+    duration_hours: number;
+  }) => api.post("/payments/rooms", data),
+  verify: (reference: string) => api.get(`/payments/${reference}`),
+};
+
 // ─── Notifications ─────────────────────────────────────────────────────────
 export const notificationsApi = {
   list: () => api.get("/notifications"),
@@ -109,7 +130,14 @@ export const settingsApi = {
 
 export const profileApi = {
   get: () => api.get("/profile"),
-  update: (data: Partial<{ name: string; bio: string; avatar_seed: string }>) =>
+  update: (
+    data: Partial<{
+      name: string;
+      bio: string;
+      prompt: string;
+      avatar_seed: string;
+    }>,
+  ) =>
     api.patch("/profile", data),
 };
 

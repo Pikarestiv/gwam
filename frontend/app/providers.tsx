@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useThemeStore } from "@/lib/stores/themeStore";
 import { useAuthStore } from "@/lib/stores/authStore";
 import { usePwaStore } from "@/lib/stores/senderSessionStore";
+import { PageViewTracker } from "@/components/PageViewTracker";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +35,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
   if (!mounted) return null;
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <PageViewTracker />
+      {children}
+    </QueryClientProvider>
   );
 }

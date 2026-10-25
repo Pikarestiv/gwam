@@ -35,6 +35,7 @@ export const adminApi = {
 
   // Dashboard
   getStats: () => api.get("/admin/dashboard/stats"),
+  getAnalytics: (days: number) => api.get(`/admin/analytics?days=${days}`),
   getMessagesChart: () => api.get("/admin/dashboard/messages-chart"),
   getSignupsChart: () => api.get("/admin/dashboard/signups-chart"),
   getTopRecipients: () => api.get("/admin/dashboard/top-recipients"),
