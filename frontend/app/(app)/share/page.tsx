@@ -30,9 +30,6 @@ export default function SharePage() {
     navigator.clipboard.writeText(link);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-    if (typeof window !== "undefined" && (window as any).umami) {
-      (window as any).umami.track("link_copied");
-    }
   };
 
   const shareOptions = [
@@ -41,14 +38,12 @@ export default function SharePage() {
       emoji: "💬",
       color: "#25D366",
       href: `https://wa.me/?text=${waText}`,
-      track: "whatsapp_share",
     },
     {
       label: "Twitter / X",
       emoji: "🐦",
       color: "#1DA1F2",
       href: `https://twitter.com/intent/tweet?text=${tweetText}`,
-      track: null,
     },
   ];
 
@@ -111,11 +106,6 @@ export default function SharePage() {
               href={opt.href}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() =>
-                opt.track &&
-                typeof window !== "undefined" &&
-                (window as any).umami?.track(opt.track)
-              }
               className="flex items-center gap-4 p-4 rounded-2xl font-semibold text-white transition-all active:scale-95"
               style={{ background: opt.color }}
             >

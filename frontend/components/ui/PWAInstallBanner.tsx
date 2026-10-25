@@ -39,13 +39,6 @@ export function PWAInstallBanner() {
   const install = async () => {
     if (!deferredPrompt) return;
     (deferredPrompt as any).prompt();
-    const { outcome } = await (deferredPrompt as any).userChoice;
-    if (outcome === "accepted") {
-      // Track in Umami
-      if (typeof window !== "undefined" && (window as any).umami) {
-        (window as any).umami.track("pwa_installed");
-      }
-    }
     setDeferredPrompt(null);
     setVisible(false);
   };

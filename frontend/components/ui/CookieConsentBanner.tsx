@@ -14,10 +14,6 @@ export function CookieConsentBanner() {
   const accept = () => {
     localStorage.setItem("gwam-cookie-consent", "accepted");
     setVisible(false);
-    // Load Umami after consent
-    if (typeof window !== "undefined" && (window as any).__umami) {
-      (window as any).__umami.track("consent_accepted");
-    }
   };
 
   const decline = () => {

@@ -19,10 +19,6 @@ export function InterstitialAd({ onClose }: InterstitialAdProps) {
   }, [countdown]);
 
   const handleSkip = () => {
-    // Track skip in Umami
-    if (typeof window !== "undefined" && (window as any).umami) {
-      (window as any).umami.track("ad_interstitial_skipped");
-    }
     onClose();
   };
 

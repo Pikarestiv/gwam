@@ -24,7 +24,7 @@ export default function PrivacyPage() {
           {[
             [
               "What We Collect",
-              "For registered users: name, username, email address, hashed password, theme preference, and message retention setting. For anonymous senders: IP address, country, city, device type, and browser (collected for safety purposes). For all users: usage analytics via Umami (privacy-friendly, no personal data).",
+              "For registered users: name, username, email address, hashed password, theme preference, and message retention setting. For anonymous senders: IP address, country, city, device type, and browser (collected for safety purposes).",
             ],
             [
               "How We Use Your Data",
@@ -35,8 +35,8 @@ export default function PrivacyPage() {
               'Message content is stored encrypted at rest. Sender metadata (IP, country, device) is stored for 6 months for safety purposes. Recipients cannot see sender identity — only metadata is accessible via the "Get Hint" feature (future paid feature).',
             ],
             [
-              "Cookies & Analytics",
-              "Gwam uses Umami Analytics (self-hosted, GDPR-compliant) for usage analytics. No third-party tracking cookies are used. AdSense may set cookies for ad personalization — you can opt out via Google Ad Settings.",
+              "Cookies",
+              "Gwam sets no analytics or third-party tracking cookies. AdSense may set cookies for ad personalization — you can opt out via Google Ad Settings.",
             ],
             [
               "Data Retention",
