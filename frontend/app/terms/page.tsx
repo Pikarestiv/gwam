@@ -55,7 +55,7 @@ export default function TermsPage() {
             ],
             [
               "8. Limitation of Liability",
-              'Gwa'm is provided "as is" without warranties of any kind. Dumostech shall not be liable for any indirect, incidental, or consequential damages arising from your use of Gwa'm.',
+              `Gwa'm is provided "as is" without warranties of any kind. Dumostech shall not be liable for any indirect, incidental, or consequential damages arising from your use of Gwa'm.`,
             ],
             [
               "9. Changes",
