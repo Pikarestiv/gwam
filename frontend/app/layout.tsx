@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Dumostech", url: "https://dumostech.com" }],
   creator: "Dumostech",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "https://app.gwam.dumostech.com",
+    process.env.NEXT_PUBLIC_APP_URL || "https://gwam.dumostech.com/app",
   ),
   openGraph: {
     type: "website",
