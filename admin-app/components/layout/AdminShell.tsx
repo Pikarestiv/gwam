@@ -66,7 +66,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       >
         <div className="flex items-center gap-3 px-6 py-6 border-b border-slate-800">
           <Ghost className="text-blue-500" size={24} />
-          <span className="font-bold text-lg text-white">Gwam Admin</span>
+          <span className="font-bold text-lg text-white">Gwa'm Admin</span>
         </div>
 
         <nav className="p-4 space-y-1">
@@ -108,7 +108,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
         <header className="md:hidden flex items-center justify-between px-4 py-4 bg-slate-950 border-b border-slate-800">
-          <span className="font-bold text-white">Gwam Admin</span>
+          <span className="font-bold text-white">Gwa'm Admin</span>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="p-2 text-slate-400"

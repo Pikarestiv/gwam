@@ -55,7 +55,7 @@ export default function ReplyPageClient() {
           href={`/u/${username}`}
           className="btn-primary mt-6 max-w-xs block text-center"
         >
-          Send another Gwam →
+          Send another Gwa'm →
         </Link>
       </div>
     );
@@ -75,7 +75,7 @@ export default function ReplyPageClient() {
             className="text-xl font-bold mt-3"
             style={{ color: "var(--color-text)" }}
           >
-            @{username} replied to your Gwam 👻
+            @{username} replied to your Gwa'm 👻
           </h1>
         </div>
         <div className="card mb-4">
@@ -118,14 +118,14 @@ export default function ReplyPageClient() {
           href={`/u/${username}`}
           className="btn-secondary mt-6 block text-center"
         >
-          Send another Gwam 👻
+          Send another Gwa'm 👻
         </Link>
         <Link
           href="/register"
           className="text-sm text-center block mt-3"
           style={{ color: "var(--color-muted)" }}
         >
-          Get your own Gwam inbox →
+          Get your own Gwa'm inbox →
         </Link>
       </div>
     </div>

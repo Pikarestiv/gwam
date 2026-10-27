@@ -52,7 +52,7 @@ function render(content: string, username: string): Promise<Blob> {
   ctx.fillStyle = "rgba(255,255,255,0.85)";
   ctx.font = "600 44px system-ui, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("Send me an anonymous message on Gwam", W / 2, H - 200);
+  ctx.fillText("Send me an anonymous message on Gwa'm", W / 2, H - 200);
 
   return new Promise((resolve, reject) =>
     canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("render failed"))), "image/png"),

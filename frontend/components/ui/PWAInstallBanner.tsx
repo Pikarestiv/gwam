@@ -71,7 +71,7 @@ export function PWAInstallBanner() {
               className="font-semibold text-sm mb-0.5"
               style={{ color: "var(--color-text)" }}
             >
-              Add Gwam to your home screen
+              Add Gwa'm to your home screen
             </p>
             <p className="text-xs" style={{ color: "var(--color-muted)" }}>
               Get the full app experience — faster, offline-ready.

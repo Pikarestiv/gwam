@@ -14,7 +14,7 @@ export default function MaintenancePage() {
       </h1>
 
       <p className="text-muted max-w-sm mx-auto mb-8 leading-relaxed">
-        Gwam is currently undergoing scheduled maintenance to improve your
+        Gwa'm is currently undergoing scheduled maintenance to improve your
         experience. We should be back online shortly! 👻
       </p>
 

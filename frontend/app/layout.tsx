@@ -3,9 +3,9 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: { default: "Gwam 👻 — Anonymous Messaging", template: "%s | Gwam" },
+  title: { default: "Gwa'm 👻 — Anonymous Messaging", template: "%s | Gwa'm" },
   description:
-    "Gwam anything. No names, no judgment. Send and receive anonymous messages.",
+    "Gwa'm anything. No names, no judgment. Send and receive anonymous messages.",
   keywords: ["anonymous messaging", "gwam", "ngl", "anonymous", "dumostech"],
   authors: [{ name: "Dumostech", url: "https://dumostech.com" }],
   creator: "Dumostech",
@@ -14,22 +14,22 @@ export const metadata: Metadata = {
   ),
   openGraph: {
     type: "website",
-    siteName: "Gwam",
-    title: "Gwam 👻 — Anonymous Messaging",
-    description: "Gwam anything. No names, no judgment.",
+    siteName: "Gwa'm",
+    title: "Gwa'm 👻 — Anonymous Messaging",
+    description: "Gwa'm anything. No names, no judgment.",
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gwam 👻 — Anonymous Messaging",
-    description: "Gwam anything. No names, no judgment.",
+    title: "Gwa'm 👻 — Anonymous Messaging",
+    description: "Gwa'm anything. No names, no judgment.",
     images: ["/og-image.png"],
   },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Gwam",
+    title: "Gwa'm",
   },
   icons: {
     icon: [

@@ -28,7 +28,7 @@ export function InterstitialAd({ onClose }: InterstitialAdProps) {
       style={{ background: "rgba(0,0,0,0.95)" }}
     >
       <p className="text-xs mb-4" style={{ color: "var(--color-muted)" }}>
-        Ads keep Gwam free 👻
+        Ads keep Gwa'm free 👻
       </p>
 
       {/* Ad unit placeholder */}

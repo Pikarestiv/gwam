@@ -94,7 +94,7 @@ export default function RegisterPage() {
             className="text-2xl font-bold mt-3"
             style={{ color: "var(--color-text)" }}
           >
-            Create your Gwam 👻
+            Create your Gwa'm 👻
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--color-muted)" }}>
             Free forever. No judgment.

@@ -22,7 +22,7 @@ export default function SharePage() {
     process.env.NEXT_PUBLIC_APP_URL || "https://app.gwam.dumostech.com";
   const link = user ? `${APP_URL}/u/${user.username}` : APP_URL;
   const waText = encodeURIComponent(
-    `Gwam me anything, I reply to all 👻 ${link}`,
+    `Gwa'm anything, I reply to all 👻 ${link}`,
   );
   const tweetText = encodeURIComponent(
     `Send me an anonymous message 👻 ${link} via @GwamApp`,
@@ -58,7 +58,7 @@ export default function SharePage() {
           style={{ color: "var(--color-text)" }}
         >
           <Share2 size={20} style={{ color: "var(--color-primary)" }} /> Share
-          your Gwam link
+          your Gwa'm link
         </h1>
         <p className="text-sm mb-6" style={{ color: "var(--color-muted)" }}>
           Share your link and start receiving anonymous messages.
@@ -67,7 +67,7 @@ export default function SharePage() {
         {/* Link display */}
         <div className="card mb-6">
           <p className="text-xs mb-2" style={{ color: "var(--color-muted)" }}>
-            Your Gwam link
+            Your Gwa'm link
           </p>
           <div
             className="flex items-center gap-2 p-3 rounded-xl"

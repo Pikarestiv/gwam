@@ -28,7 +28,7 @@ export default function PrivacyPage() {
             ],
             [
               "How We Use Your Data",
-              "To operate the Gwam service, send email notifications, enforce content moderation, prevent abuse, and improve the product. We do not sell your personal data to third parties.",
+              "To operate the Gwa'm service, send email notifications, enforce content moderation, prevent abuse, and improve the product. We do not sell your personal data to third parties.",
             ],
             [
               "Anonymous Messaging",
@@ -36,7 +36,7 @@ export default function PrivacyPage() {
             ],
             [
               "Cookies",
-              "Gwam counts page views and key actions (like sending a message) with an anonymous random per-tab ID, stored on our own servers for 90 days — no cookies, no IP address, no account link. You can opt out by declining the cookie banner. AdSense may set cookies for ad personalization — you can opt out via Google Ad Settings.",
+              "Gwa'm counts page views and key actions (like sending a message) with an anonymous random per-tab ID, stored on our own servers for 90 days — no cookies, no IP address, no account link. You can opt out by declining the cookie banner. AdSense may set cookies for ad personalization — you can opt out via Google Ad Settings.",
             ],
             [
               "Data Retention",
@@ -52,7 +52,7 @@ export default function PrivacyPage() {
             ],
             [
               "Children",
-              "Gwam is not intended for children under 13. We do not knowingly collect data from children under 13.",
+              "Gwa'm is not intended for children under 13. We do not knowingly collect data from children under 13.",
             ],
             [
               "Changes",
@@ -79,7 +79,7 @@ export default function PrivacyPage() {
           className="text-sm"
           style={{ color: "var(--color-primary)" }}
         >
-          ← Back to Gwam
+          ← Back to Gwa'm
         </Link>
       </div>
     </div>

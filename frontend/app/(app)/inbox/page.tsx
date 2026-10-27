@@ -81,7 +81,7 @@ export default function InboxPage() {
               className="text-sm mt-1"
               style={{ color: "var(--color-subtle)" }}
             >
-              Share your Gwam link to start receiving anonymous messages.
+              Share your Gwa'm link to start receiving anonymous messages.
             </p>
           </div>
         ) : (

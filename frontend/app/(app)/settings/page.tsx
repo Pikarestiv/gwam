@@ -13,7 +13,7 @@ import { PushToggle } from "@/components/settings/PushToggle";
 const themes = [
   {
     id: "gwam_dark",
-    label: "Gwam Dark",
+    label: "Gwa'm Dark",
     desc: "Electric purple · Neon cyan",
     color: "#7c3aed",
   },

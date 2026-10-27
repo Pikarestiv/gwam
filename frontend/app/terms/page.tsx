@@ -27,23 +27,23 @@ export default function TermsPage() {
           {[
             [
               "1. Acceptance",
-              "By using Gwam, you agree to these Terms. If you do not agree, do not use the service.",
+              "By using Gwa'm, you agree to these Terms. If you do not agree, do not use the service.",
             ],
             [
               "2. Eligibility",
-              "You must be at least 13 years old to use Gwam. By using Gwam, you confirm you meet this requirement.",
+              "You must be at least 13 years old to use Gwa'm. By using Gwa'm, you confirm you meet this requirement.",
             ],
             [
               "3. Acceptable Use",
-              "You agree not to use Gwam to send threatening, harassing, defamatory, obscene, or illegal content. You agree not to impersonate others or send spam. Abusive messages are logged by IP and may be reported to authorities.",
+              "You agree not to use Gwa'm to send threatening, harassing, defamatory, obscene, or illegal content. You agree not to impersonate others or send spam. Abusive messages are logged by IP and may be reported to authorities.",
             ],
             [
               "4. Anonymous Messaging",
-              "Gwam is designed for anonymous communication. While senders are anonymous to recipients, Gwam logs IP addresses and device metadata for safety and abuse prevention purposes.",
+              "Gwa'm is designed for anonymous communication. While senders are anonymous to recipients, Gwa'm logs IP addresses and device metadata for safety and abuse prevention purposes.",
             ],
             [
               "5. Content Moderation",
-              "Gwam uses automated keyword filtering and human review to detect and remove abusive content. We reserve the right to delete any content and suspend any account that violates these Terms.",
+              "Gwa'm uses automated keyword filtering and human review to detect and remove abusive content. We reserve the right to delete any content and suspend any account that violates these Terms.",
             ],
             [
               "6. Message Retention",
@@ -51,15 +51,15 @@ export default function TermsPage() {
             ],
             [
               "7. Advertising",
-              "Gwam displays advertisements to support the free service. By using Gwam, you consent to the display of relevant ads.",
+              "Gwa'm displays advertisements to support the free service. By using Gwa'm, you consent to the display of relevant ads.",
             ],
             [
               "8. Limitation of Liability",
-              'Gwam is provided "as is" without warranties of any kind. Dumostech shall not be liable for any indirect, incidental, or consequential damages arising from your use of Gwam.',
+              'Gwa'm is provided "as is" without warranties of any kind. Dumostech shall not be liable for any indirect, incidental, or consequential damages arising from your use of Gwa'm.',
             ],
             [
               "9. Changes",
-              "We may update these Terms at any time. Continued use of Gwam after changes constitutes acceptance of the new Terms.",
+              "We may update these Terms at any time. Continued use of Gwa'm after changes constitutes acceptance of the new Terms.",
             ],
             [
               "10. Contact",
@@ -82,7 +82,7 @@ export default function TermsPage() {
           className="text-sm"
           style={{ color: "var(--color-primary)" }}
         >
-          ← Back to Gwam
+          ← Back to Gwa'm
         </Link>
       </div>
     </div>

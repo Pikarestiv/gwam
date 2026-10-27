@@ -34,7 +34,7 @@ export function CookieConsentBanner() {
       >
         <div className="flex items-start justify-between gap-3 mb-3">
           <p className="text-sm" style={{ color: "var(--color-text)" }}>
-            🍪 We use analytics to improve Gwam. No personal data sold.
+            🍪 We use analytics to improve Gwa'm. No personal data sold.
           </p>
           <button
             onClick={decline}

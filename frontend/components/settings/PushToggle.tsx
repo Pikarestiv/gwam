@@ -73,7 +73,7 @@ export function PushToggle() {
               Push notifications
             </p>
             <p className="text-xs" style={{ color: "var(--color-muted)" }}>
-              Get pinged when someone sends you a Gwam.
+              Get pinged when someone sends you a Gwa'm.
             </p>
           </div>
         </div>

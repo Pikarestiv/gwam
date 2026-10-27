@@ -30,7 +30,7 @@ export default function OfflinePage() {
         You're offline 👻
       </h1>
       <p className="text-sm mt-2" style={{ color: "#94a3b8" }}>
-        Gwam needs a connection to send and receive messages.
+        Gwa'm needs a connection to send and receive messages.
         <br />
         Check your internet and try again.
       </p>

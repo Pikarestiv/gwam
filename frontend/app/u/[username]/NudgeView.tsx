@@ -83,7 +83,7 @@ export function NudgeView({ username }: { username: string }) {
       </p>
 
       <Link href="/register" className="btn-primary mt-6 max-w-xs">
-        Create your own Gwam →
+        Create your own Gwa'm →
       </Link>
     </div>
   );

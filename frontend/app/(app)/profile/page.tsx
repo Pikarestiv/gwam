@@ -69,10 +69,10 @@ export default function ProfilePage() {
           {!isVerified && <span className="badge-danger mt-2">Unverified</span>}
         </div>
 
-        {/* Gwam link */}
+        {/* Gwa'm link */}
         <div className="card mb-6">
           <p className="text-xs mb-2" style={{ color: "var(--color-muted)" }}>
-            Your Gwam link
+            Your Gwa'm link
           </p>
           <div className="flex items-center gap-2">
             <p

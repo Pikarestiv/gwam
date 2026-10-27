@@ -54,7 +54,7 @@ export default function LoginPage() {
             Welcome back 👻
           </h1>
           <p className="text-sm mt-1" style={{ color: "var(--color-muted)" }}>
-            Sign in to your Gwam account
+            Sign in to your Gwa'm account
           </p>
         </div>
 

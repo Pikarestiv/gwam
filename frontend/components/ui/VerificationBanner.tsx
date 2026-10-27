@@ -36,7 +36,7 @@ export function VerificationBanner() {
         style={{ color: "var(--color-primary)", flexShrink: 0 }}
       />
       <p className="flex-1" style={{ color: "var(--color-text)" }}>
-        ⚠️ Verify your email to activate your inbox and Gwam link.{" "}
+        ⚠️ Verify your email to activate your inbox and Gwa'm link.{" "}
         <Link
           href="/verify-email"
           className="underline font-medium"

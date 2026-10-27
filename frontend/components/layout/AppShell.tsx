@@ -104,7 +104,7 @@ export function Sidebar() {
           className="text-xl font-bold"
           style={{ color: "var(--color-primary)" }}
         >
-          Gwam
+          Gwa'm
         </span>
       </Link>
 
@@ -191,7 +191,7 @@ export function TopBar({ title }: { title?: string }) {
           className="font-bold text-lg"
           style={{ color: "var(--color-primary)" }}
         >
-          {title || "Gwam"}
+          {title || "Gwa'm"}
         </span>
       </Link>
       <Link href="/settings" style={{ color: "var(--color-muted)" }}>

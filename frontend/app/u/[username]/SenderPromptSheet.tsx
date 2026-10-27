@@ -59,7 +59,7 @@ export function SenderPromptSheet({
               👻 Want to know when @{username} reads your message?
             </h3>
             <p className="text-sm mt-1" style={{ color: "var(--color-muted)" }}>
-              Leave your email and we&apos;ll notify you — or create a free Gwam
+              Leave your email and we&apos;ll notify you — or create a free Gwa'm
               account.
             </p>
           </div>

@@ -30,7 +30,7 @@ export default function HomePage() {
         className="text-3xl font-bold mt-6"
         style={{ color: "var(--color-text)" }}
       >
-        Gwam anything. 👻
+        Gwa'm anything. 👻
       </h1>
       <p
         className="text-base mt-2 max-w-xs"

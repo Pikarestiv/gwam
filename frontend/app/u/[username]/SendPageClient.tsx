@@ -140,7 +140,7 @@ export default function SendPageClient() {
               className="text-xl font-bold"
               style={{ color: "var(--color-text)" }}
             >
-              Send @{username} a Gwam 👻
+              Send @{username} a Gwa'm 👻
             </h1>
             <p className="text-sm mt-1" style={{ color: "var(--color-muted)" }}>
               {profile.prompt ||
@@ -178,7 +178,7 @@ export default function SendPageClient() {
                 "Sending…"
               ) : (
                 <>
-                  <Send size={16} /> Send Gwam
+                  <Send size={16} /> Send Gwa'm
                 </>
               )}
             </button>
@@ -212,7 +212,7 @@ export default function SendPageClient() {
           className="text-xs"
           style={{ color: "var(--color-muted)" }}
         >
-          Get your own Gwam link — it&apos;s free 👻
+          Get your own Gwa'm link — it&apos;s free 👻
         </Link>
       </div>
     </div>

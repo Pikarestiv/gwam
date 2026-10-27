@@ -2,7 +2,7 @@
 self.addEventListener("push", (event) => {
   const data = event.data ? event.data.json() : {};
   event.waitUntil(
-    self.registration.showNotification(data.title || "Gwam", {
+    self.registration.showNotification(data.title || "Gwa'm", {
       body: data.body || "",
       icon: "/icons/icon-192.png",
       data: { url: data.url || "/inbox" },
