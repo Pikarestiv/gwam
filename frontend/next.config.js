@@ -19,6 +19,7 @@ const nextConfig = {
   // .htaccess rewrites all requests to index.html for SPA routing
   output: "export",
   trailingSlash: true,
+  basePath: "/app",
   images: {
     unoptimized: true,
     domains: ["api.dicebear.com"],
@@ -26,9 +27,9 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL:
       process.env.NEXT_PUBLIC_API_URL ||
-      "https://api.gwam.dumostech.com/api/v1",
+      "https://gwam-api.dumostech.com/api/v1",
     NEXT_PUBLIC_APP_URL:
-      process.env.NEXT_PUBLIC_APP_URL || "https://app.gwam.dumostech.com",
+      process.env.NEXT_PUBLIC_APP_URL || "https://gwam.dumostech.com/app",
   },
   // Suppress the generateStaticParams warning for dynamic routes
   // These pages are rendered client-side via useParams()

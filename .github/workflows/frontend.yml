@@ -30,8 +30,8 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          NEXT_PUBLIC_API_URL: https://api.gwam.dumostech.com/api/v1
-          NEXT_PUBLIC_APP_URL: https://app.gwam.dumostech.com
+          NEXT_PUBLIC_API_URL: https://gwam-api.dumostech.com/api/v1
+          NEXT_PUBLIC_APP_URL: https://gwam.dumostech.com/app
 
       - name: Deploy to Namecheap (FTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -40,7 +40,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./frontend/out/
-          server-dir: /app.gwam.dumostech.com/
+          server-dir: /gwam.dumostech.com/app/
           protocol: ftps
           exclude: |
             **/.git*

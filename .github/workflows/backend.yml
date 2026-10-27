@@ -23,7 +23,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.SSH_HOST }}
           REMOTE_USER: ${{ secrets.SSH_USER }}
           REMOTE_PORT: ${{ secrets.SSH_PORT }}
-          TARGET: "/home/${{ secrets.SSH_USER }}/api.gwam.dumostech.com"
+          TARGET: "/home/${{ secrets.SSH_USER }}/gwam-api.dumostech.com"
           EXCLUDE: "/storage/, /vendor/, /.env, /node_modules/"
 
       - name: Run Post-Deploy Commands
@@ -34,7 +34,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/api.gwam.dumostech.com
+            cd ~/gwam-api.dumostech.com
             PHP_BIN=/opt/alt/php81/usr/bin/php
             if [ ! -x "$PHP_BIN" ]; then echo "PHP 8.1 CLI not found at $PHP_BIN - check installed alt-php versions" && exit 1; fi
             if [ ! -f "$HOME/bin/composer.phar" ]; then

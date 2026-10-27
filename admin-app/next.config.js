@@ -10,7 +10,7 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL:
       process.env.NEXT_PUBLIC_API_URL ||
-      "https://api.gwam.dumostech.com/api/v1",
+      "https://gwam-api.dumostech.com/api/v1",
   },
 };
 

@@ -25,8 +25,8 @@ Each has its own `package.json`/`composer.json` and its own GitHub Actions workf
 |---|---|---|
 | `landing/` | FTP | `gwam.dumostech.com` (root) |
 | `admin-app/` | FTP, static export with `basePath: "/admin"` | `gwam.dumostech.com/admin` (nested under landing's docroot — **not** a separate subdomain anymore, changed 2026-08) |
-| `frontend/` | FTP, static export | `app.gwam.dumostech.com` |
-| `backend/` | SSH/rsync + post-deploy script | `api.gwam.dumostech.com` |
+| `frontend/` | FTP, static export with `basePath: "/app"` | `gwam.dumostech.com/app` (nested under landing's docroot) |
+| `backend/` | SSH/rsync + post-deploy script | `gwam-api.dumostech.com` |
 
 **Important, hard-won infra facts** — these cost real debugging time, don't rediscover them:
 
@@ -46,7 +46,7 @@ Each has its own `package.json`/`composer.json` and its own GitHub Actions workf
 
 5. **Static export + dynamic routes need manual `.htaccess` rewrite rules.** Both `frontend` and `admin-app` use `output: "export"` with `trailingSlash: true`. Dynamic route pages (e.g. `app/room/[code]/page.tsx`, `app/u/[username]/page.tsx`) use `generateStaticParams()` returning a single placeholder (`{ code: "_" }` / `{ username: "_" }`), producing one template HTML file (`out/room/_/index.html`) that the client-side router repopulates from the real URL. This **only works for in-app client-side navigation**. Any hard navigation (page reload, opening a link in a new tab, a bookmarked/shared URL) hits the server directly and needs an explicit rewrite rule in `frontend/public/.htaccess` mapping the real path pattern to the `_` template, e.g.:
    ```apache
-   RewriteRule ^room/[^/]+/?$ /room/_/index.html [L,QSA]
+   RewriteRule ^room/[^/]+/?$ /app/room/_/index.html [L,QSA]
    ```
    **This was missing for `/room/[code]` and caused a real bug**: clicking a room from a hard-navigation context fell through to the generic SPA fallback (`/index.html`), which auto-redirects authenticated users to `/inbox` (see `frontend/app/page.tsx`) — this looked exactly like "rooms are broken" from the user's perspective but had nothing to do with room logic. **Whenever you add a new dynamic route to either static-export app, you must add a matching rewrite rule to that app's `.htaccess`, or hard navigations to it will silently misbehave.**
 

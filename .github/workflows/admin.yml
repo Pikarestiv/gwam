@@ -30,7 +30,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          NEXT_PUBLIC_API_URL: https://api.gwam.dumostech.com/api/v1
+          NEXT_PUBLIC_API_URL: https://gwam-api.dumostech.com/api/v1
 
       - name: Deploy to Namecheap (FTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
