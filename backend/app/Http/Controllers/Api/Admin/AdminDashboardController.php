@@ -41,21 +41,43 @@ class AdminDashboardController extends Controller
 
   public function messagesChart()
   {
-    $data = Message::selectRaw('DATE(created_at) as date, COUNT(*) as count')
-      ->where('created_at', '>=', now()->subDays(30))
+    $raw = Message::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+      ->where('created_at', '>=', now()->subDays(29)->startOfDay())
       ->groupBy('date')
-      ->orderBy('date')
-      ->get();
+      ->pluck('count', 'date');
+
+    $data = [];
+    for ($i = 29; $i >= 0; $i--) {
+      $carbon = now()->subDays($i);
+      $dateStr = $carbon->format('Y-m-d');
+      $data[] = [
+        'date' => $carbon->format('M d'),
+        'raw_date' => $dateStr,
+        'count' => (int) ($raw[$dateStr] ?? 0),
+      ];
+    }
+
     return response()->json(['success' => true, 'message' => 'Chart data.', 'data' => $data]);
   }
 
   public function signupsChart()
   {
-    $data = User::selectRaw('DATE(created_at) as date, COUNT(*) as count')
-      ->where('created_at', '>=', now()->subDays(30))
+    $raw = User::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+      ->where('created_at', '>=', now()->subDays(29)->startOfDay())
       ->groupBy('date')
-      ->orderBy('date')
-      ->get();
+      ->pluck('count', 'date');
+
+    $data = [];
+    for ($i = 29; $i >= 0; $i--) {
+      $carbon = now()->subDays($i);
+      $dateStr = $carbon->format('Y-m-d');
+      $data[] = [
+        'date' => $carbon->format('M d'),
+        'raw_date' => $dateStr,
+        'count' => (int) ($raw[$dateStr] ?? 0),
+      ];
+    }
+
     return response()->json(['success' => true, 'message' => 'Signups chart.', 'data' => $data]);
   }
 

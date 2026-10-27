@@ -83,54 +83,70 @@ export default function DashboardPage() {
       </div>
 
       {/* Chart */}
-      <div className="card h-96">
-        <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-          <TrendingUp size={20} className="text-blue-500" /> Message Volume
-          (Last 30 Days)
-        </h3>
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={messagesChart}>
-            <defs>
-              <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="#334155"
-              vertical={false}
-            />
-            <XAxis
-              dataKey="date"
-              stroke="#94a3b8"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-            />
-            <YAxis
-              stroke="#94a3b8"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#1e293b",
-                borderColor: "#334155",
-                color: "#f8fafc",
-              }}
-              itemStyle={{ color: "#f8fafc" }}
-            />
-            <Area
-              type="monotone"
-              dataKey="count"
-              stroke="#3b82f6"
-              fillOpacity={1}
-              fill="url(#colorCount)"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+      <div className="card">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <TrendingUp size={20} className="text-blue-500" /> Message Volume
+            (Last 30 Days)
+          </h3>
+          <span className="text-xs text-slate-400 bg-slate-800 px-2.5 py-1 rounded-full border border-slate-700">
+            {messagesChart.reduce(
+              (acc: number, d: any) => acc + (d.count || 0),
+              0,
+            )}{" "}
+            messages in 30 days
+          </span>
+        </div>
+        <div className="h-72 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={messagesChart}>
+              <defs>
+                <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#334155"
+                vertical={false}
+              />
+              <XAxis
+                dataKey="date"
+                stroke="#94a3b8"
+                fontSize={11}
+                tickLine={false}
+                axisLine={false}
+                interval="preserveStartEnd"
+              />
+              <YAxis
+                stroke="#94a3b8"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                allowDecimals={false}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: "#1e293b",
+                  borderColor: "#334155",
+                  color: "#f8fafc",
+                  borderRadius: "8px",
+                }}
+                itemStyle={{ color: "#f8fafc" }}
+                formatter={(val: any) => [`${val} messages`, "Volume"]}
+              />
+              <Area
+                type="monotone"
+                dataKey="count"
+                stroke="#3b82f6"
+                strokeWidth={2}
+                fillOpacity={1}
+                fill="url(#colorCount)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );

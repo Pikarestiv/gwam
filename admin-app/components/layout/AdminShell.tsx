@@ -12,6 +12,7 @@ import {
   ShieldAlert,
   BarChart3,
   Settings,
+  Home,
   LogOut,
   Menu,
   X,
@@ -22,6 +23,7 @@ import clsx from "clsx";
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Users", href: "/users", icon: Users },
+  { label: "Rooms", href: "/rooms", icon: Home },
   { label: "Messages", href: "/messages", icon: MessageSquare },
   { label: "Reports", href: "/reports", icon: AlertTriangle },
   { label: "Blocked IPs", href: "/blocked-ips", icon: ShieldAlert },
@@ -40,9 +42,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     setIsMounted(true);
   }, []);
 
-  // Normalize: strip trailing slash for comparison (trailingSlash: true adds it)
-  const cleanPath = pathname.replace(/\/$/, "") || "/";
-  const isLoginPage = cleanPath === "/login";
+  // Normalize: strip optional /admin basePath and trailing slashes for comparison
+  const normalizedPath =
+    pathname.replace(/^\/admin/, "").replace(/\/$/, "") || "/";
+  const isLoginPage = normalizedPath === "/login";
 
   useEffect(() => {
     if (isMounted && !isAuthenticated && !isLoginPage) {
@@ -71,15 +74,19 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
         <nav className="p-4 space-y-1">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive =
+              normalizedPath === item.href ||
+              (item.href !== "/" &&
+                normalizedPath.startsWith(item.href + "/"));
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setMobileOpen(false)}
                 className={clsx(
                   "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-blue-600 text-white"
+                    ? "bg-blue-600 text-white shadow-sm"
                     : "text-slate-400 hover:bg-slate-900 hover:text-white",
                 )}
               >

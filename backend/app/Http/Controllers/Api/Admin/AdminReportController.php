@@ -9,11 +9,19 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminReportController extends Controller
 {
-  public function index()
+  public function index(Request $request)
   {
-    $reports = Report::with(['message.recipient:id,username', 'reporter:id,username'])
-      ->orderByDesc('created_at')
-      ->paginate(25);
+    $query = Report::with([
+      'message.recipient:id,username',
+      'roomMessage.room:id,name,code',
+      'reporter:id,username',
+    ]);
+
+    if ($request->filled('status') && in_array($request->status, ['pending', 'reviewed', 'resolved'])) {
+      $query->where('status', $request->status);
+    }
+
+    $reports = $query->orderByDesc('created_at')->paginate(25);
     return response()->json(['success' => true, 'message' => 'Reports retrieved.', 'data' => $reports]);
   }
 

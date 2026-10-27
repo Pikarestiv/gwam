@@ -65,7 +65,14 @@ export const adminApi = {
   unblockIp: (id: number) => api.delete(`/admin/blocked-ips/${id}`),
   blockIp: (ip: string) => api.post("/admin/blocked-ips", { ip }),
 
-  // Settings
+  // Reports
+  getReports: (page = 1, status = "") =>
+    api.get(`/admin/reports?page=${page}${status ? `&status=${status}` : ""}`),
+  updateReport: (
+    id: number,
+    data: { status: "pending" | "reviewed" | "resolved"; admin_note?: string },
+  ) => api.patch(`/admin/reports/${id}`, data),
+
   // Settings
   getSettings: () => api.get("/admin/settings"),
   updateSettings: (data: any) => api.patch("/admin/settings", data),
