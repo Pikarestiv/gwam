@@ -19,7 +19,7 @@ export default function ProfilePage() {
   const [copied, setCopied] = useState(false);
 
   const APP_URL =
-    process.env.NEXT_PUBLIC_APP_URL || "https://app.gwam.dumostech.com";
+    process.env.NEXT_PUBLIC_APP_URL || "https://gwam.dumostech.com/app";
   const link = `${APP_URL}/u/${user?.username}`;
 
   const updateMutation = useMutation({

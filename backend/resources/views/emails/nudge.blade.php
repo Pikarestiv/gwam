@@ -73,13 +73,13 @@
     <p>
       Hey <strong>{{ $user->name }}</strong>!<br><br>
       Someone visited your Gwam link at
-      <strong>app.gwam.dumostech.com/u/{{ $user->username }}</strong>
+      <strong>gwam.dumostech.com/app/u/{{ $user->username }}</strong>
       and wanted to send you an anonymous message — but couldn't because your inbox isn't activated yet.
     </p>
     <p style="margin-top: 16px;">
       Verify your email to unlock your inbox and start receiving anonymous messages!
     </p>
-    <a href="{{ env('FRONTEND_URL', 'https://app.gwam.dumostech.com') }}/verify-email" class="btn">
+    <a href="{{ env('FRONTEND_URL', 'https://gwam.dumostech.com/app') }}/verify-email" class="btn">
       Activate My Inbox →
     </a>
     <div class="footer">

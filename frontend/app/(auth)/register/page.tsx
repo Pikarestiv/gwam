@@ -157,7 +157,7 @@ export default function RegisterPage() {
               className="text-xs mt-1"
               style={{ color: "var(--color-subtle)" }}
             >
-              app.gwam.dumostech.com/u/{form.username || "yourname"}
+              gwam.dumostech.com/app/u/{form.username || "yourname"}
             </p>
           </div>
           {field("email", "Email", "email", "you@example.com")}

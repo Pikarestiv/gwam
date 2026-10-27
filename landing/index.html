@@ -837,7 +837,7 @@
       async function fetchStats() {
         try {
           const res = await fetch(
-            "https://api.gwam.dumostech.com/api/v1/stats",
+            "https://gwam-api.dumostech.com/api/v1/stats",
           );
           if (!res.ok) return;
           const data = await res.json();

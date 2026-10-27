@@ -38,7 +38,7 @@ read -p "Press Enter once you have added the public key to your server..."
 echo ""
 echo "--- 2. Enter Deployment Credentials ---"
 
-read -p "Enter SSH_HOST (e.g., api.gwam.dumostech.com): " SSH_HOST
+read -p "Enter SSH_HOST (e.g., gwam-api.dumostech.com): " SSH_HOST
 read -p "Enter SSH_USER (e.g., your-server-user): " SSH_USER
 echo "Using generated private key for SSH_PRIVATE_KEY..."
 

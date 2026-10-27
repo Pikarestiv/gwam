@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "@/lib/stores/authStore";
 
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "https://api.gwam.dumostech.com/api/v1";
+  process.env.NEXT_PUBLIC_API_URL || "https://gwam-api.dumostech.com/api/v1";
 
 export const api = axios.create({
   baseURL: API_URL,

@@ -13,5 +13,5 @@ return [
     'public' => env('VAPID_PUBLIC_KEY'),
     'private' => env('VAPID_PRIVATE_KEY'),
   ],
-  'app_url' => env('APP_FRONTEND_URL', 'https://app.gwam.dumostech.com'),
+  'app_url' => env('APP_FRONTEND_URL', 'https://gwam.dumostech.com/app'),
 ];

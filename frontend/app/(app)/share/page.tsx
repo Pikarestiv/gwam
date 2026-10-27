@@ -19,7 +19,7 @@ export default function SharePage() {
   const [copied, setCopied] = useState(false);
 
   const APP_URL =
-    process.env.NEXT_PUBLIC_APP_URL || "https://app.gwam.dumostech.com";
+    process.env.NEXT_PUBLIC_APP_URL || "https://gwam.dumostech.com/app";
   const link = user ? `${APP_URL}/u/${user.username}` : APP_URL;
   const waText = encodeURIComponent(
     `Gwa'm anything, I reply to all 👻 ${link}`,
